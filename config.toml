@@ -1,5 +1,4 @@
 baseURL = 'https://myblog-gamma-olive.vercel.app/'
-languageCode = 'en-us'
 title = 'ZJP'
 theme = "m10c"
 paginate = 8
