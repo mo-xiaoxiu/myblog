@@ -1,6 +1,6 @@
 baseURL = 'http://example.org/'
 languageCode = 'en-us'
 title = 'ZJP'
-theme = "ananke"
+theme = "m10c"
 
 
