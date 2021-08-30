@@ -1,9 +1,8 @@
 baseURL = 'http://example.org/'
 languageCode = 'en-us'
 title = 'ZJP'
-theme = "m10c-2"
-
-
+theme = "m10c"
+paginate = 8
 
 [menu]
   [[menu.main]]
