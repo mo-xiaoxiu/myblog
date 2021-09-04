@@ -1,5 +1,5 @@
-baseURL = "https://myblog-gamma-olive.vercel.app/"
-title = "Your title"
+baseURL = "https://myblog-mo-xiaoxiu.vercel.app/"
+title = "ZJP's Note"
 themesDir = "../.."
 theme = "m10c"
 paginate = 8
