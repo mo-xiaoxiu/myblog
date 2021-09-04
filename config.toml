@@ -14,11 +14,11 @@ paginate = 8
     name = "Tags"
     url = "/tags/"
     weight = 2
-  [[menu.main]]
-    identifier = "about"
-    name = "About"
-    url = "\myblog\content\about\about.md"
-    weight = 3
+  #[[menu.main]]
+    #identifier = "about"
+    #name = "About"
+    #url = "\myblog\content\about\about.md"
+    #weight = 3
 
 [params]
   author = "ZJPeng"
