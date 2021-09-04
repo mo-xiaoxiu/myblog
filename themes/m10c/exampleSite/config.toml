@@ -22,17 +22,17 @@ paginate = 8
     weight = 3
 
 [params]
-  author = "John Doe"
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  author = "ZJPeng"
+  description = "sharing knowledge...."
   menu_item_separator = " - "
   [[params.social]]
     icon = "github"
     name = "Github"
-    url = "https://github.com/gohugoio"
+    url = "https://github.com/mo-xiaoxiu/myblog"
   [[params.social]]
     icon = "twitter"
     name = "Twitter"
-    url = "https://twitter.com/gohugoio"
+    url = "https://twitter.com/tkMhJW1bT7Zwof2"
 
   # Default theme
   #[params.style]
