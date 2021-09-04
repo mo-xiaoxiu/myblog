@@ -1,4 +1,4 @@
-baseURL = "https://myblog-mo-xiaoxiu.vercel.app/"
+baseURL = "https://myblog-gamma-olive.vercel.app/"
 title = "ZJP's Note"
 themesDir = "../.."
 theme = "m10c"
