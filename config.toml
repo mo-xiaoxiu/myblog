@@ -17,7 +17,7 @@ paginate = 8
   [[menu.main]]
     identifier = "about"
     name = "About"
-    url = "/about/"
+    url = "\myblog\content\about\about.md"
     weight = 3
 
 [params]
