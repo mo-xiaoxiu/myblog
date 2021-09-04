@@ -10,7 +10,7 @@ draft: true
 
 *微信公众号：墨小秀*
 
-*个人博客：*https://mo-xiaoxiu.github.io/
+*个人博客：*https://myblog-mo-xiaoxiu.vercel.app/
 
 
 
