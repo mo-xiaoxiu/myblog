@@ -1,5 +1,5 @@
 ---
-title:The list
+tltle: The list
 ---
 
 # 链表的实现
@@ -71,7 +71,6 @@ struct ListNode*initListNode(){
 *C++版本初始化链表（此处以不带头结点的链表为演示）：*
 
 ```C++
-
 // create and init at the same time
 
 struct NodeList{
