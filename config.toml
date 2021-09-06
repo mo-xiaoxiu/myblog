@@ -1,5 +1,5 @@
 baseURL = 'https://myblog-gamma-olive.vercel.app/'
-title = 'ZJP's Note'
+title = 'ZJP'
 theme = "m10c"
 paginate = 8
 
@@ -50,9 +50,9 @@ paginate = 8
   #  primaryColor = "#dad865"
 
   # Red theme
-  [[params.style]]
-    darkestColor = "#d35050"
-    darkColor = "#212121"
-    lightColor = "#d6d6d6"
-    lightestColor = "#d3d3d3"
-    primaryColor = "#ffffff"
+  #[params.style]
+  #  darkestColor = "#d35050"
+  #  darkColor = "#212121"
+  #  lightColor = "#d6d6d6"
+  #  lightestColor = "#d3d3d3"
+  #  primaryColor = "#ffffff"
