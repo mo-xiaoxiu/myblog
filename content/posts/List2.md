@@ -1,5 +1,5 @@
 ---
-title: "The list(2)"
+title: "链表的代码实现(2)"
 date: 2021-09-06T10:29:50+08:00
 draft: true
 ---
