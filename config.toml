@@ -1,5 +1,5 @@
 baseURL = 'https://myblog-gamma-olive.vercel.app/'
-title = 'ZJP's Note'
+title = 'ZJP'
 theme = "m10c"
 paginate = 8
 
@@ -33,13 +33,13 @@ paginate = 8
     name = "Twitter"
     url = "https://twitter.com/tkMhJW1bT7Zwof2"
 
-   Default theme
-  [params.style]
-    darkestColor = "#242930"
-    darkColor = "#353b43"
-    lightColor = "#afbac4"
-    lightestColor = "#ffffff"
-    primaryColor = "#57cc8a"
+  # Default theme
+  #[params.style]
+  #  darkestColor = "#242930"
+  #  darkColor = "#353b43"
+  #  lightColor = "#afbac4"
+  #  lightestColor = "#ffffff"
+  #  primaryColor = "#57cc8a"
 
   # Green theme
   #[params.style]
