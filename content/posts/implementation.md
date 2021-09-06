@@ -140,6 +140,7 @@ int find(struct ListNode*mylist,int val){
 ```
 
 ## 合并两个有序链表
+```C
 struct ListNode* mergeTwoList(struct ListNode*l1,struct ListNode*l2){
     if(l1->size==0) return l2;
     if(l2->size==0) return l1;
@@ -165,6 +166,7 @@ struct ListNode* mergeTwoList(struct ListNode*l1,struct ListNode*l2){
     li->header.next=l2->header.next=NULL;
     return head;
 }
+```
 
 ## 对链表进行插入排序
 1.插入节点时选择插入排序
