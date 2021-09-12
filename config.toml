@@ -9,11 +9,11 @@ paginate = 8
     name = "Home"
     url = "/"
     weight = 1
-  [[menu.main]]
-    identifier = "tags"
-    name = "Tags"
-    url = "/tags/"
-    weight = 2
+  #[[menu.main]]
+    #identifier = "tags"
+    #name = "Tags"
+    #url = "/tags/"
+    #weight = 2
   #[[menu.main]]
     #identifier = "about"
     #name = "About"
