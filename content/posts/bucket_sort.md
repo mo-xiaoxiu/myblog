@@ -94,7 +94,7 @@ struct ListNode* insertion_sort(struct ListNode*bucket){
         }
         else{
             struct ListNode*pre=head;
-            if(head->next->data<=cur->data){
+            if(pre->next->data<=cur->data){
                 pre=pre->next;
             }
             lastSort->next=cur->next;
