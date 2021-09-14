@@ -105,3 +105,336 @@ This is init game
 This is over game
 ```
 
+---
+
+### 策略模式
+
+将一系列相似功能的算法封装起来，使得它们之间可以相互替换。比较适用于多`if-else`语句的情况
+
+<u>*定义一个计算类*</u>：`calculation.h`
+
+```C++
+#ifndef __CALCULATION__
+#define __CALCULATION__
+
+#include<iostream>
+
+// calculation
+class Calculation{
+public:
+    Calculation(){}
+    virtual ~Calculation(){}
+    
+    virtual void operation(){std::cout<<"Base operation"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*在计算加法的``add.h`头文件中*</u>
+
+```C++
+#ifndef __ADD__
+#define __ADD__
+
+#include"calculation.h"
+
+class Add:public Calculation{
+	void operation() override {std::cout<<"this is add operation."<<std::endl;}    
+};
+
+#endif
+
+```
+
+<u>*在计算减法的`sub.h`头文件中*</u>
+
+```C++
+#ifndef __SUB__
+#define __SUD__
+
+#include"calculation.h"
+
+class Sub:public Calculation{
+    void operation() override {std::cout<<"this is sub operation."<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*写一个封装各类计算的函数*</u>
+
+```C++
+#include"add.h"
+#include"sub.h"
+
+int strategy(){
+    Calculation* cal=new Add();
+    cal->operation();
+    delete cal;
+    
+    Calculaion* cal_=new Sub();
+    cal_->operation();
+    delete cal;
+}
+```
+
+在使用时只需要了解此函数
+
+---
+
+### 观察者模式
+
+定义对象间的一对多的关系，当其中一个对象发生改变时，其他对象也都会被通知以发生相应的改变
+
+<u>*在观察者`observer.h`头文件中*</u>
+
+```C++
+#ifndef __OBSERVER__
+#define __OBSERVER__
+
+#include<iostream>
+
+class ObserverBase{
+public:
+    ObserverBase(){}
+    virtual ~ObserverBase(){}
+    
+    // 表示更新内容的函数
+    virtual void Update(){}
+};
+
+#endif
+```
+
+<u>*在观察者子对象`observerfirstchild.h`头文件中*</u>
+
+```C++
+#ifndef __OBSERVERFIRSTCHILD__
+#define __OBSERVERFIRSTCHILD__
+#include"observer.h"
+
+class Child_1:public ObserverBase{
+    void Update() override {std::cout<<"First child"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*在另一个观察者子对象`observersecondchild.h`*</u>
+
+```C++
+#ifndef __OBSERVERSECONDCHILD__
+#define __OBSERVERSECONDCHILD__
+#include"observer.h"
+
+class Child_2:public ObserverBase{
+    void Update() override {std::cout<<"Second child"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*在程序中写上通知的类*</u>
+
+```C++
+#include"obseerverfirstchild.h"
+#include"observersecondchild.h"
+#include<list>
+
+class NotifyBase{
+    public:
+    	void Add(ObserverBase* obj){observers.emplace_back(obj);}
+    
+    	void Remove(ObseerverBase* obj){observers.remove(obj);}
+    
+    	void Notify(){
+            for(auto observer:observers){
+                observer->Update();
+            }
+        }
+    private:
+    	std::list<ObserverBase* > observers;
+};
+
+int main(){
+    ObserverBase* base1=new Child_1();
+    ObserverBase* base2=new Child_2();
+    
+    NotifyBase notify;
+    notify.Add(base2);
+    notify.Add(base1);
+    notify.Notify();
+    
+    notify.Remove(base1);
+    notify.Notify();
+    
+    return 0;
+}
+```
+
+---
+
+### 装饰器模式
+
+顾名思义，装饰器模式就是建立一个装饰器，将各种相关的类继承于这个装饰器，使其完成各种组合的功能；可以针对于策略模式单一的类继承
+
+*现在写一个能组合各种游戏技能的功能* 
+
+<u>*在一个游戏`game.h`的头文件中*</u>
+
+```C++
+#ifndef __GAME__
+#define __GAME__
+
+#include<iostream>
+
+class Game{
+    public:
+    	Game(){}
+    	virtual ~Game(){}
+    
+    	// 游戏技能的类
+    	virtual void Skill(){std::cout<<"game skill"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*定义一个装饰器的类，用于继承于各个游戏*`decoration.h`</u>
+
+```C++
+#ifndef __DECORATION__
+#define __DECORATION__
+
+#include"game.h"
+
+class Decoration:public game{
+    protected:
+    	Game* game_;
+    public:
+    //构造函数：对各个游戏技能进行组合（传进来一个跟当前不一样的游戏类对象）
+    	Decoration(Game* game){game_=game;}
+    
+    	void Skill() override {game->Skill();}
+    
+    	virtual ~Decoration(){}
+};
+
+#endif
+
+```
+
+<u>*现在有一个篮球游戏类`basketball.h`*</u>
+
+```C++
+#ifndef __BASKETBALL__
+#define __BASKETBALL__
+
+#include"decoration.h"
+
+// 各个游戏只需要继承负责组合的装饰器类就可以了
+class Basketball:public Decoration{
+    public:
+    // 构造函数：对装饰器进行初始化
+    	Basketball(Game* game):Decoration(game){}
+    // 调用技能函数：显示各自游戏的操作，追加技能表示
+    	void Skill() override{
+            std::cout<<"basketball game"<<std::endl;
+            Decoration::Skill();
+        }
+};
+
+#endif
+
+```
+
+<u>*定义超级玛丽类`supermarry.h`*</u>
+
+```C++
+#ifndef __SUPERMARRY__
+#define __SUPERMARRY__
+
+#include"decoration.h"
+
+class SuperMarry:public Decoraion{
+    public:
+    	SuperMarry(Game* game):Decoration(game){}
+    
+    	void Skill() override {
+            std::cout<<"this is super_marry game"<<std::endl;
+        	Decoration::Skill();
+        }
+};
+
+#endif
+
+```
+
+<u>*定义一个Lol游戏类`Lol.h`*</u>
+
+```C++
+#ifndef __LOL__
+#define __LOL__
+
+#include"decoration.h"
+
+class Lol:public Decoration{
+    public:
+    	Lol(Game* game):Decoration(game){}
+    
+    	void Skill() override{
+            std::cout<<"this is Lol game"<<std::endl;
+            Decoration::Skill();
+        }
+};
+
+#endif
+
+```
+
+
+
+<u>*使用*</u>
+
+```C++
+#include"basketball.h"
+#include"supermarry.h"
+#include"Lol.h"
+#include"decoration.h"
+
+int main(){
+    Game* lol=new Lol();
+    Game* supermarry=new SuperMarry();
+    
+    // 既可以打篮球又会打超级玛丽
+    Game* basketball_superMarry=new Basketball(supermarry);
+    basketball_supermarry->Skill();
+    std::cout<<std::endl;
+    
+    // 既可以打篮球又可以打lol
+    Game* basketball_lol=new Basketball(lol);
+    basketball_lol->Skill();
+    std::cout<<std::endl;
+    
+    // 既可以打篮球又可以打超级玛丽，还可以打lol
+    Game* all=new Lol(basketball_supermarry);
+    all-。Skill();
+    std::cout<<std::endl;
+    
+    // 释放内存
+    delete lol;
+    delete supermarry;
+    delete basketball_supermarry;
+    delete basketball_lol;
+    delete all;
+    
+    return 0;
+}
+```
+
