@@ -424,7 +424,7 @@ int main(){
     
     // 既可以打篮球又可以打超级玛丽，还可以打lol
     Game* all=new Lol(basketball_supermarry);
-    all-。Skill();
+    all->Skill();
     std::cout<<std::endl;
     
     // 释放内存
@@ -437,4 +437,6 @@ int main(){
     return 0;
 }
 ```
+
+---
 
