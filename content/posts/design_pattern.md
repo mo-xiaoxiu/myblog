@@ -440,3 +440,296 @@ int main(){
 
 ---
 
+### 桥接模式
+
+定义出**实现类**和**抽象类**，实现和抽象功能分离，各自适应变化
+
+<u>*实现一个图形画图功能，有对应形状和颜色，其中同种形状可以有不同的颜色*</u>
+
+<u>*创建一个实现颜色的类，实现各种颜色的绘制。之后会成为抽象图形类的成员变量：`draw.h`*</u>
+
+```C++
+#ifndef __DRAW__
+#define __DRAW__
+
+#include<iostream>
+
+class ShapeDraw{
+    public:
+    	virtual void Draw()=0;	// 在子类中重写
+    	virtual ~ShapeDraw(){}	// 虚析构
+};
+
+#endif
+
+```
+
+<u>*画出红颜色：*</u>`draw_red.h`
+
+```C++
+#ifndef __RED__
+#define __RED__
+
+#include"draw.h"
+
+class DrawRed:public ShapeDraw{
+    public:
+    	void Draw() override {std::cout<<"draw red"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*画出黑颜色：*</u>`draw_black.h`
+
+```C++
+#ifndef __BLACK__
+#define __BLACK__
+
+#include"draw.h"
+
+class DrawBlack:public ShapeDraw{
+    public:
+    	void Draw() override {std::cout<<"draw black"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*接下来定义一个图形基类，可以画出多个不同的图形，也可以上不同的颜色：*</u>`shape.h`
+
+```C++
+#ifndef __SHAPE__
+#define __SHAPE__
+
+#include"draw.h"
+
+class Shape{
+    protected:
+    	ShapeDraw* impl;						// 实现类对象作为抽象类的成员变量
+    
+    public:
+    	virtual void Update(){}					// 用于重写形状
+    	Shape(ShapeDraw* impl_):impl(impl_){}
+};
+
+#endif
+
+```
+
+<u>*接下来写一个继承于抽象的图形基类的派生类：圆形*</u>  `circle.h`
+
+```C++
+#ifndef __CIRCLE__
+#define __CIRCLE__
+
+#include"shape.h"
+
+class Circle:public Shape{
+    public:
+    	void Update() override{std::cout<<"circle shape"<<std::endl;
+                              impl->Draw();}
+    	Circle(ShapeDraw* imp):Shape(imp){}		// 构造函数初始化实现类对象：在画出这个圆形的同时就指定其颜色
+    	
+};
+
+#endif
+
+```
+
+<u>*写一个矩形的类*</u> `rectangle.h`
+
+```C++
+#ifndef __RECTANGLE__
+#define __RECTANGLE__
+
+#include"shape.h"
+
+class Rectangle:public Shape{
+    public:
+    	void Update() override{std::cout<<"rectangle shape"<<std::endl;
+                              impl->Draw();}
+    	Rectangle(ShapeDraw* imp):Shape(imp){}		
+};
+```
+
+<u>*一个示例测试来实现其使用：*</u>
+
+```C++
+#include"circle.h"
+#include"rectangle.h"
+#include"draw_red.h"
+#include"draw_black.h"
+
+int main(){
+    // 要求绘制颜色：黑色
+    ShapeDraw* impl=new DrawBlack();
+    // 画一个黑色的圆
+    Shape* cir=new Circle(impl);
+    // 调用其实现
+    cir->Update();
+    
+    delete impl;
+    delete cir;
+    
+    return 0;
+}
+```
+
+*输出：*
+
+```
+circle shape
+draw black
+
+```
+
+**抽象类和实现类的互相配合**
+
+---
+
+### 工厂模式
+
+顾名思义，想工厂一样生产不同的产品。创建一个工厂基类，再为每一个类型创建相应的工厂继承于它，每个工厂可以生产具体的产品
+
+<u>*椅子类：`chair.h`*</u>
+
+```C++
+#ifndef __CHAIR__
+#define __CHAIR__
+
+#include<iostream>
+
+class Chair{
+    public:
+    	Chair(){}
+    	virtual ~Chair(){}
+    
+    	virtual void Show(){std::cout<<"The chair"<<std::endl;}		// 到子类中表示产品是什么类型的椅子
+};
+
+#endif
+
+```
+
+<u>*低端椅子类：`low_chair.h`*</u>
+
+```C++
+#ifndef __LOW_CHAIR__
+#define __LOW_CHAIR__
+
+#include"chair.h"
+
+class LowChair:public Chair{
+    public:
+    	void Show() override{std::cout<<"Low chair"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*高端椅子类：`high_chair.h`*</u>
+
+```C++
+#ifndef __HIGH_CHAIR__
+#define __HIGH_CHAIR__
+
+#include"chair.h"
+
+class HighChair:public Chair{
+    public:
+    	void Show() override{std::cout<<"High chair"<<std::endl;}
+};
+
+#endif
+
+```
+
+<u>*总工厂类：`factory.h`*</u>
+
+```C++
+#ifndef __FACTORY__
+#define __FACTORY__
+
+#include"chair"
+
+class Factory{
+    public:
+    	Factory(){}
+    	virtual ~Factory(){}
+    
+    	virtual Chair* createChair(){}		// 到不同的工厂中生产不同等级的椅子
+};
+
+#endif
+
+```
+
+<u>*生产低端椅子的工厂，继承于总工厂（是总工厂的一部分）：`LowFactor.h`*</u>
+
+```C++
+#ifndef __LOW_FACTORY__
+#define __LOW_FACTORY__
+
+#include"factory.h"
+
+class LowFactory:public Factory{
+    public:
+    	Chair* createChair() override{
+            return new LowChair();
+        }
+};
+
+#endif
+
+```
+
+<u>*生产高端椅子的工厂，继承于总工厂（总工厂的一部分）：`HighFactory.h`*</u>
+
+```C++
+#ifndef __HIGH_FACTORY__
+#define __HIGH_FACTORY__
+
+#include"factory.h"
+
+class HighFactory:public Factory{
+    public:
+    	Chair* createChair() override{
+            return new HighChair();
+        }
+};
+
+#endif
+
+```
+
+<u>*现在分别生产高端椅子和低端椅子：*</u>
+
+```C++
+#include"LowChair.h"
+#include"HighChair.h"
+#include"LowFactory.h"
+#include"HighFactory.h"
+
+int main(){
+    // 利用低端工厂创建一把低端椅子
+    // 只需要将生产出的椅子返回给椅子总类就可以
+    // 相当于生产方只需要看到生产出的椅子
+    Factory* low_fac=new LowFactory();
+    Chair* chair=low_fac->createChair();
+    
+    delete low_fac;
+    
+    // 创建一把高端椅子
+    Factory* high_fac=new HighFactory();
+    Chair* chair_=high_fac->createChair();
+    
+    delete high_fac;
+    
+    return 0;
+}
+```
+
