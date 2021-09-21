@@ -147,7 +147,7 @@ public:
     }
     
     ListNode* mergeKList(vector<ListNode*>& lists){
-        return merge(lists,0,list.size()-1);
+        return merge(lists,0,lists.size()-1);
     }
 };
 ```
