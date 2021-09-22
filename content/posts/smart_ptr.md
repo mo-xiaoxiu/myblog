@@ -138,7 +138,7 @@ class shared_ptr{
         }
     
     	// 为了类外几种类型转换定义需要
-    	template<typedef U.
+    	template<typedef U>
     	shared_ptr(shared_count<U>& other,T* ptr) noexcept{
             ptr_=ptr;
             if(ptr_){
