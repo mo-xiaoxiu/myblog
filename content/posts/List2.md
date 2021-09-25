@@ -62,6 +62,11 @@ struct ListNode*TwoListPlus(struct ListNode*l1,struct ListNode*l2){
             t2=t2->next;
         }
     }
+    if(carry>0){
+        tail->next=(struct Node*)malloc(sizeof(struct Node));
+        tail->next->val=carry;
+    }
+    
     struct ListNode*newlist=(struct ListNode*)malloc(sizeof(struct ListNode));
     newlist->header.next=head;
     // you can get its size
