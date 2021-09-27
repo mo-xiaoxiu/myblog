@@ -1,5 +1,5 @@
 ---
-title: "RRTI"
+title: "C++的RRTI"
 date: 2021-09-27T17:06:48+08:00
 draft: true
 ---
