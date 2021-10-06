@@ -51,9 +51,9 @@ aabaaf
 
 前缀表：
 字母：				索引：			前后缀相等数量：
-a					0			0
-aa					1			1
-aab					2			0
+a				0			0
+aa				1			1
+aab				2			0
 aaba				3			1
 aabaa				4			2
 aabaaf				5			0
