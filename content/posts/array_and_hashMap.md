@@ -1,10 +1,10 @@
 ---
-title: "数组+哈希表+双指针"
+title: "哈希表知识点"
 date: 2021-10-03T16:01:40+08:00
 draft: true
 ---
 
-# 数组+哈希表+滑动窗口
+# 哈希表与其他方法的组合
 
 ## 哈希+数组
 
@@ -170,7 +170,61 @@ public:
 };
 ```
 
+
+
+## 重复的DNA序列
+
+*原题链接：https://leetcode-cn.com/problems/repeated-dna-sequences/*
+
+```
+所有 DNA 都由一系列缩写为 'A'，'C'，'G' 和 'T' 的核苷酸组成，例如："ACGAATTCCG"。在研究 DNA 时，识别 DNA 中的重复序列有时会对研究非常有帮助。
+
+编写一个函数来找出所有目标子串，目标子串的长度为 10，且在 DNA 字符串 s 中出现次数超过一次。
+
+ 
+
+示例 1：
+
+输入：s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+输出：["AAAAACCCCC","CCCCCAAAAA"]
+示例 2：
+
+输入：s = "AAAAAAAAAAAAA"
+输出：["AAAAAAAAAA"]
+ 
+
+提示：
+
+0 <= s.length <= 105
+s[i] 为 'A'、'C'、'G' 或 'T'
+```
+
+*代码实现：*
+
+```C++
+class Solution{
+    public:
+    	vector<string> findRepeatedDnaSequences(string s) {
+            vector<string> res;
+            // key：子串	value：子串出现次数
+            unordered_map<string,int>count;	// 用哈希表放置子串，作为计数
+            
+            int n=s.size();
+            for(int i=0;i<=n-10;i++){
+                string str=s.substr(i,L);
+                if(++count[str]==2) res.push_back(str);
+            }
+            
+            return res;
+        }
+};
+```
+
+
+
 ---
+
+
 
 ## 滑动窗口 + 哈希表
 
@@ -251,6 +305,72 @@ public:
     }
 };
 ```
+
+
+
+## 重复的DNA序列
+
+*原题链接：https://leetcode-cn.com/problems/repeated-dna-sequences/*
+
+```
+所有 DNA 都由一系列缩写为 'A'，'C'，'G' 和 'T' 的核苷酸组成，例如："ACGAATTCCG"。在研究 DNA 时，识别 DNA 中的重复序列有时会对研究非常有帮助。
+
+编写一个函数来找出所有目标子串，目标子串的长度为 10，且在 DNA 字符串 s 中出现次数超过一次。
+
+ 
+
+示例 1：
+
+输入：s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+输出：["AAAAACCCCC","CCCCCAAAAA"]
+示例 2：
+
+输入：s = "AAAAAAAAAAAAA"
+输出：["AAAAAAAAAA"]
+ 
+
+提示：
+
+0 <= s.length <= 105
+s[i] 为 'A'、'C'、'G' 或 'T'
+
+```
+
+*代码实现：*
+
+```C++
+class Solution{
+    public:
+    	const int L=10;
+    	unordered_map<char,int>map={{'A',0},{'C',1},{'G',2},{'T',3}};	// 将字符串中出现的字母转换成比特位
+    
+    	vector<string> findRepeatedDnaSequences(string s) {
+			vector<string> res;	// 结果数组
+            if(s.size()<=10) return res;	// 如果字符串的长度比10还小，则直接返回
+            
+            // x：用来表示滑动窗口的值（int：32bit  限定其最低位的10位作为字符串的滑动窗口）
+            int x=0;
+            // 先将开头的10个字符放入滑动窗口
+            for(int i=0;i<L-1;i++){
+                x=(x<<2) | (map[s[i]]);
+            }
+            
+            // 后续加入字母，窗口长度不满足，缩小窗口
+            // 哈希表计数：以滑动窗口中的值作为key（可以避免用字母直接表示滑动窗口而在放入哈希表检查时需要大量空间的情况），以子串出现次数作为value
+            unorderde_map<int,int>count;
+            for(int i=0;i<s.size()-L+1;i++){
+                x=((x<<2) | (map[s[i+L-1]])) & (1<<2*L-1);
+                if(++count[x]==2){
+                    res.push_back(s.substr(i,L));
+                }
+            }
+            
+            return res;
+        }
+};
+```
+
+
 
 ---
 
