@@ -443,3 +443,177 @@ class Solution{
 
 ---
 
+## 滑动窗口最大值
+
+*原题链接：https://leetcode-cn.com/problems/sliding-window-maximum/*
+
+```
+给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+
+返回滑动窗口中的最大值。
+
+ 
+
+示例 1：
+
+输入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+输出：[3,3,5,5,6,7]
+解释：
+滑动窗口的位置                最大值
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+示例 2：
+
+输入：nums = [1], k = 1
+输出：[1]
+示例 3：
+
+输入：nums = [1,-1], k = 1
+输出：[1,-1]
+示例 4：
+
+输入：nums = [9,11], k = 2
+输出：[11]
+示例 5：
+
+输入：nums = [4,-2], k = 2
+输出：[4]
+ 
+
+提示：
+
+1 <= nums.length <= 105
+-104 <= nums[i] <= 104
+1 <= k <= nums.length
+
+```
+
+**双端队列：**
+
+* 创建一个双端队列，队列中的元素维护的是逆序的（从大到小的）排列的、数组中的元素下标
+* 保持队列的队首维护的是此时滑动窗口中的最大值下标
+* 当滑动窗口长度超过k时，缩小窗口
+	具体的，当前遍历位置和k的差值，表示初始化窗口之后遍历的长度，`dq.front()`表示的是此队列中的最大值下标，表示滑动窗口数组元素的位置，如果`i-k`超过了最大值的位置，说明超过了滑动窗口的长度，这个可以由几何关系得知
+
+*代码实现：*
+
+```C++
+class Solution{
+    public:
+    	vector<int> maxSlidingWindow(vector<int>& nums,int k){
+            if(k==0) return{};
+            
+            deque<int>dq;
+            vector<int> res;
+            for(int i=0;i<k;i++){
+                if(!dq.empty() && nums[i]>nums[dq.front()]){
+                    dq.pop_back();
+                }
+                dq.push_back(i);
+            }
+            
+            res.push_back(nums[dq.front()]);
+            
+            for(int i=k;i<nums.size();i++){
+                if(!dq.empty() && dq.front()<=i-k){
+                    dq.pop_front();
+                }
+                
+                while(!dq.empty() && nums[i]>nums[dq.front()]){
+                    dq.pop_back();
+                }
+                dq.push_back(i);
+                
+                res.push_back(nums[dq.front()]);
+            }
+            
+            return res;
+        }
+};
+```
+
+---
+
+## 前k个高频元素
+
+*原题链接：https://leetcode-cn.com/problems/top-k-frequent-elements/*
+
+```
+给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
+
+ 
+
+示例 1:
+
+输入: nums = [1,1,1,2,2,3], k = 2
+输出: [1,2]
+示例 2:
+
+输入: nums = [1], k = 1
+输出: [1]
+ 
+
+提示：
+
+1 <= nums.length <= 105
+k 的取值范围是 [1, 数组中不相同的元素的个数]
+题目数据保证答案唯一，换句话说，数组中前 k 个高频元素的集合是唯一的
+ 
+
+进阶：你所设计算法的时间复杂度 必须 优于 O(n log n) ，其中 n 是数组大小。
+
+```
+
+**优先队列：**
+
+* 哈希表：记录数组中元素及其出现次数，方便统计频率
+* 优先队列：定义比较算法为从小到大（优先队列默认是大根堆），输出数组时弹出的键值对就是按照元素出现次数从大到小的
+
+*代码实现：*
+
+```C++
+class Solution{
+    public:
+    	// 自定义比较函数
+    	class Compair{
+            public:
+            	bool operator()(const pair<int,int>& lhs,const pair<int,int>& rhs ){
+                    return lhs.second>rhs.second;
+                }
+        }.
+    
+    	vector<int> topKfrequent(vector<int>& nums,int k){
+            unordeder_map<int,int>map;		// 记录数组中元素及其出现的次数
+            for(int i=0;i<nums.size();i++){
+                map[num[i]]++;
+            }
+            
+            // 优先队列：自定义比较函数（默认优先队列为大根堆）
+            priority_queue<pair<int,int>,vector<pair<int,int>>,myCompair> pr_que;
+            
+            for(auto it=map.begin();it!=map.end();it++){
+                pr_que.push(*it);
+                if(pr_que.size()>k){
+                    pr_que.pop();
+                }
+            }
+            
+            // 结果数组：反向输出
+            vector<int> res(k);
+            for(int i=k-1;i>=0;i--){
+                res[i]=pr_que.top().first;
+                pr_que.pop();
+            }
+            
+            return res;
+        }
+};
+```
+
+---
+
