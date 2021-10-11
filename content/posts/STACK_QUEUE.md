@@ -618,3 +618,52 @@ class Solution{
 
 ---
 
+## 栈 + 键值对
+
+*原题链接：https://leetcode-cn.com/problems/path-sum/submissions/*
+
+```
+给你二叉树的根节点 root 和一个表示目标和的整数 targetSum ，判断该树中是否存在 根节点到叶子节点 的路径，这条路径上所有节点值相加等于目标和 targetSum 。
+
+叶子节点 是指没有子节点的节点。
+
+```
+
+* 键值对：第一个值是树节点；第二个值是路径总和
+* 栈：先压根节点，再压左节点，再压右节点。压节点前先判断栈顶元素是否满足条件
+
+```C++
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(root==nullptr) return false; // 先判断题目给定的树节点是否为空
+
+        // 准备一个栈：存储键值对（当前树节点，路经值总和）
+        stack<pair<TreeNode*,int>>st;
+
+        // 根节点入栈
+        st.push(pair<TreeNode*,int>(root,root->val));
+        while(!st.empty()){
+            pair<TreeNode*,int>node=st.top();
+            st.pop();
+
+            // 判断当前节点是否到达叶子节点且满足目标值条件，是则返回真
+            if(node.first->left==nullptr && node.first->right==nullptr && node.second==targetSum )
+            return true;
+
+            // 最底层：有左节点，右节点为空，左节点入栈，加上当前节点值求下一次迭代的路径总和
+            if(node.first->left){
+                st.push(pair<TreeNode*,int>(node.first->left,node.second+node.first->left->val));
+            }
+            // 最底层：有右节点，左节点为空，右节点入栈，加上当前节点的值求下一次迭代的路径总和
+            if(node.first->right){
+                st.push(pair<TreeNode*,int>(node.first->right,node.second+node.first->right->val));
+            }
+        }
+        return false;
+    }
+};
+```
+
+---
+
