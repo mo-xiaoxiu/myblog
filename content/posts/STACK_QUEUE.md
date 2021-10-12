@@ -667,3 +667,106 @@ public:
 
 ---
 
+## 栈/队列 + 二叉树
+
+*原题链接：https://leetcode-cn.com/problems/symmetric-tree/*
+
+```
+给定一个二叉树，检查它是否是镜像对称的。
+
+ 
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+ 
+
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+ 
+
+进阶：
+
+你可以运用递归和迭代两种方法解决这个问题吗？
+
+```
+
+*代码实现（栈）：*
+
+```C++
+class Solution{
+    public:
+    	bool isSymmetric(TreeNode* root){
+            if(root==nullptr) return nullptr;
+            stack<TreeNode*> st;
+            
+            st.push(root->left);
+            st.push(root->right);
+            while(!st.empty()){
+                TreeNode* rightNode=st.top();
+                st.pop();
+                TreeNode* leftNode=st.top();
+                st.pop();
+                
+                if(leftNode==nullptr && rightNode==nullptr) continue;
+                
+                if(!leftNode || !rightNode || leftNode->val!=rightNode->val) return false;
+                
+                st.push(rightNode->right);
+                st.push(leftNode->left);
+                st.push(rightNode->left);
+                st.push(leftNode->right);
+            }
+            
+            return root;
+        }
+};
+```
+
+**左右节点成对放入，成对取出**
+* 成对放入的节点是空节点，说明此时满足条件（对称）
+* 单独只有左节点，或者单独只有右节点，或者左右节点的值不相等
+* **节点压栈顺序：**二叉树外侧和内测节点成对压入
+
+*代码实现（队列）：*
+
+```C++
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if(root==nullptr) return true;
+        queue<TreeNode*> que;
+        que.push(root->left);
+        que.push(root->right);
+
+        while(!que.empty()){
+            TreeNode* rightNode=que.front();
+            que.pop();
+            TreeNode* leftNode=que.front();
+            que.pop();
+
+            if(!leftNode && !rightNode) continue;
+
+            if(!leftNode || !rightNode || leftNode->val!=rightNode->val) return false;
+
+            que.push(rightNode->right);
+            que.push(leftNode->left);
+            que.push(rightNode->left);
+            que.push(leftNode->right);
+        }
+        return true;
+    }
+};
+```
+
+---
+
