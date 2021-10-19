@@ -362,3 +362,324 @@ class Solution{
 
 ---
 
+## 路径总和
+
+*原题链接：https://leetcode-cn.com/problems/path-sum/*
+
+```
+给你二叉树的根节点 root 和一个表示目标和的整数 targetSum ，判断该树中是否存在 根节点到叶子节点 的路径，这条路径上所有节点值相加等于目标和 targetSum 。
+
+叶子节点 是指没有子节点的节点。
+
+ 
+
+示例 1：
+
+
+输入：root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22
+输出：true
+示例 2：
+
+
+输入：root = [1,2,3], targetSum = 5
+输出：false
+示例 3：
+
+输入：root = [1,2], targetSum = 0
+输出：false
+ 
+
+提示：
+
+树中节点的数目在范围 [0, 5000] 内
+-1000 <= Node.val <= 1000
+-1000 <= targetSum <= 1000
+
+```
+
+### 回溯算法
+
+#### 递归三部曲
+
+##### 递归函数
+
+- 递归函数返回值：函数要求返回是否满足条件的真或假（bool）
+- 递归函数参数：根节点，目标值在递归函数中递减为0来判断是否满足条件
+
+##### 递归终止条件
+
+- 遍历到叶子节点且已经满足目标值，返回真
+- 遍历到叶子节点但是不满足条件，返回假
+
+##### 单层遍历逻辑
+
+- 遍历到最底层只有左节点，右节点为空，判断是否满足条件，回溯
+- 遍历到最底层只有右节点，左节点为空，判断是否满足条件，回溯
+
+*代码实现：*
+
+```C++
+class Solution{
+    public:
+    	bool traversal(TreeNode* node,int sum){
+            // 递归终止条件
+            if(!node->left && !node->right && sum==0) return true;
+            if(!node->left && !node->right) return false;
+            
+            // 单层递归逻辑：包含回溯的过程
+            if(node->left){
+                traversal(node->left,sum-node->left->val);
+            }
+            if(node->right){
+                traversal(node->right,sum-node->right->val);
+            }
+            
+            return false;
+        }
+    
+    	bool hasPathSum(TreeNode* node,int targetSum){
+            if(node==nullptr) return false;
+            int sum=targetSum;
+            // 递归函数参数和返回值
+            return traversal(node,sum-node->val);
+        }
+};
+```
+
+*精简代码实现：*
+
+```C++
+class Solution{
+    public:
+    	bool hasPathSum(TreeNode* root,int targetSum){
+            if(root==nullptr) return false;
+            if(!root->left && !root->right && targetSum==root->val) return true;
+            
+            return hasPathSum(root->left,targetSum-root->val) && hasPathSum(root->right,targetSum-root->val);
+        }
+};
+```
+
+---
+
+### 迭代法
+
+#### 栈 + 键值对
+
+- 键值对：第一个值是树节点；第二个值是路径总和
+- 栈：先压根节点，再压左节点，再压右节点。压节点前先判断栈顶元素是否满足条件
+
+```C++
+class Solution{
+    public:
+    	bool hasPathSum(TreeNode* root,int targetSum){
+            if(root==nullptr) return false;
+            // 准备一个栈存放键值对
+            stack<pair<TreeNode*,int>> st;
+            
+            st.push(pair<TreeNode*,int>(root,root->val));
+            while(!st.empty()){
+                pair<TreeNode*,int>node=st.top();
+                st.pop();
+                // 判断节点左右孩子是否为空，且路径总和是否相等
+                if(!node.first->left && !node.first->right && node.second==targetSum){
+                    return true;
+                }
+                // 压入左节点键值对：路径总和 = 当前节点值 + 下一次遍历的左节点的值 
+                if(node.first->left){
+                    st.push(pair<TreeNode*,int>(node.first->left,node.first->left->val+node.second));
+                }
+                // 压入右节点键值对
+                if(node.first->right){
+                    st.push(pair<TreeNode*,int>(node.first->right,node.second+node.first->right->val));
+                }
+            }
+            return false;
+        }
+};
+```
+
+---
+
+## 路径总和II
+
+*原题链接：https://leetcode-cn.com/problems/path-sum-ii/submissions/*
+
+```
+给你二叉树的根节点 root 和一个整数目标和 targetSum ，找出所有 从根节点到叶子节点 路径总和等于给定目标和的路径。
+
+叶子节点 是指没有子节点的节点。
+
+ 
+
+示例 1：
+
+
+输入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
+输出：[[5,4,11,2],[5,8,4,5]]
+示例 2：
+
+
+输入：root = [1,2,3], targetSum = 5
+输出：[]
+示例 3：
+
+输入：root = [1,2], targetSum = 0
+输出：[]
+ 
+
+提示：
+
+树中节点总数在范围 [0, 5000] 内
+-1000 <= Node.val <= 1000
+-1000 <= targetSum <= 1000
+
+```
+
+### 递归法
+
+*代码实现：*
+
+```C++
+class Solution {
+public:
+    vector<vector<int>>res; // 结果数组
+    vector<int>path;        // 存放路径的数组
+
+    // 递归函数
+    // 返回值：遍历哦整棵树收取所有结果，所以不需要返回值（遍历部分路径返回真假需要返回值）
+    // 参数：根节点、路径总和（函数中递减比较）
+    void traversal(TreeNode* root,int sum){
+        // 递归终止条件
+        if(!root->left && !root->right && sum==0){
+            res.push_back(path);
+            return;
+        }
+
+        if(!root->left && !root->right) return;
+
+        // 单层递归逻辑
+        // 递归左子树
+        if(root->left){
+            path.push_back(root->left->val);
+            sum-=root->left->val;
+            traversal(root->left,sum);
+            sum+=root->left->val;   // 回溯
+            path.pop_back();
+        }
+        // 递归右子树
+        if(root->right){
+            path.push_back(root->right->val);
+            sum-=root->right->val;
+            traversal(root->right,sum);
+            sum+=root->right->val;  // 回溯
+            path.pop_back();
+        }
+        return;
+
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        if(root==nullptr) return res;
+        path.push_back(root->val);  // 先将根节点放入路径中，之后传参时递减比较
+        traversal(root,targetSum-root->val);
+
+        return res;
+    }
+};
+```
+
+---
+
+## 路径总和III：进阶
+
+*原题链接：https://leetcode-cn.com/problems/path-sum-iii/*
+
+```
+给定一个二叉树的根节点 root ，和一个整数 targetSum ，求该二叉树里节点值之和等于 targetSum 的 路径 的数目。
+
+路径 不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+
+ 
+
+示例 1：
+
+
+
+输入：root = [10,5,-3,3,2,null,11,3,-2,null,1], targetSum = 8
+输出：3
+解释：和等于 8 的路径有 3 条，如图所示。
+示例 2：
+
+输入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
+输出：3
+ 
+
+提示:
+
+二叉树的节点个数的范围是 [0,1000]
+-109 <= Node.val <= 109 
+-1000 <= targetSum <= 1000 
+
+```
+
+### 回溯算法
+
+**前缀和：当前节点cur为从根节点到此节点上的路径所有节点值之和**
+
+#### 回溯三部曲
+
+##### 递归函数参数
+
+* 根节点
+* 目标值
+* 前缀和
+
+##### 递归终止条件
+
+当节点为空（遍历到叶子节点时），返回0
+
+##### 单层逻辑
+
+不断计算当前节点的前缀和，判断是否有cur-target的值存在。若存在，说明肯定有从目标值target的节点和的路径。可以使用哈希表记录当前节点前缀和的数量，然后递归当前节点的左右子树
+回溯（返回到当前节点的位置），回溯时不断返回结果值，最后返回的结果值就是所有满足目标值的路径数
+
+*代码实现：*
+
+```C++
+class Solution{
+    public:
+    	unordered_map<int,int> map;
+    
+    	int traversal(TreeNode* node,int cur,int targetSum){
+            if(!root) return 0;	// 递归终止条件
+            
+            int res=0;	// 结果路径数
+            cur+=node->val;	// 当前路径总和
+            
+            // 如果在哈希表中，存在当前节点的路径总和与目标值之差的哈希值，说明存在满足题目要求的路径
+            if(map.count[cur->targetSum]){
+                // 结果就是这个哈希值
+                res=map[cur-targetSum];
+            }
+            
+            // 递归，回溯
+            map[cur]++;
+            // 分别加和递归左右子树的路径数量
+            res+=traversal(node->left,cur,targetSum);
+            res+=traversal(node->right,cur,targetSum);
+            map[cur]--;
+            
+            return res;
+        }
+    
+    	int pathSum(TreeNode* root,int targetSum){
+            // 初始化哈希表
+            map[0]=1;
+            return traversal(root,0,targetSum);
+        }
+};
+```
+
+---
+
