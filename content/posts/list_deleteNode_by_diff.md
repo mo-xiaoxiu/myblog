@@ -82,4 +82,7 @@ class Solution{
 
 看了上面的思路，我把这道题的思路放在了另外一篇文章当中
 
-*链接：*
+*链接：https://myblog-gamma-olive.vercel.app/posts/addnode_in_list_by_diff/*
+
+---
+
