@@ -892,3 +892,174 @@ public:
 
 ---
 
+## 二叉搜素树中的搜索
+
+*原题链接：https://leetcode-cn.com/problems/search-in-a-binary-search-tree/*
+
+```
+给定二叉搜索树（BST）的根节点和一个值。 你需要在BST中找到节点值等于给定值的节点。 返回以该节点为根的子树。 如果节点不存在，则返回 NULL。
+
+例如，
+
+给定二叉搜索树:
+
+        4
+       / \
+      2   7
+     / \
+    1   3
+
+和值: 2
+你应该返回如下子树:
+
+      2     
+     / \   
+    1   3
+在上述示例中，如果要找的值是 5，但因为没有节点值为 5，我们应该返回 NULL。
+
+```
+
+### 递归
+
+*代码实现：*
+
+```C++
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if(root==nullptr) return nullptr;
+
+        if(root->val>val){
+            return searchBST(root->left,val);
+        }else if(root->val<val){
+            return searchBST(root->right,val);
+        }else{
+            return root;
+        }
+    }
+};
+```
+
+### 迭代
+
+*代码实现：*
+
+```C++
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if(root==nullptr) return nullptr;
+
+        while(root!=nullptr){
+            if(root->val>val){
+                root=root->left;
+            }else if(root->val<val){
+                root=root->right;
+            }else{
+                return root;
+            }
+        }
+        return nullptr;
+    }
+};
+```
+
+---
+
+## 验证二叉搜索树
+
+*原题链接：https://leetcode-cn.com/problems/validate-binary-search-tree/submissions/*
+
+```
+给你一个二叉树的根节点 root ，判断其是否是一个有效的二叉搜索树。
+
+有效 二叉搜索树定义如下：
+
+节点的左子树只包含 小于 当前节点的数。
+节点的右子树只包含 大于 当前节点的数。
+所有左子树和右子树自身必须也是二叉搜索树。
+ 
+
+示例 1：
+
+
+输入：root = [2,1,3]
+输出：true
+示例 2：
+
+
+输入：root = [5,1,4,null,null,3,6]
+输出：false
+解释：根节点的值是 5 ，但是右子节点的值是 4 。
+ 
+
+提示：
+
+树中节点数目范围在[1, 104] 内
+-231 <= Node.val <= 231 - 1
+
+```
+
+### 递归
+
+参考中序遍历，这是因为二叉搜索树的性质：先判断左子树是否满足条件，在判断右子树
+* 递归到空节点，说明遍历到最深了，满足条件，返回真
+* 先递归左子树
+* 然后处理中间节点：递归左子树之后返回时，用一个临时节点记录当前的上一个节点，并比较节点的值的大小
+* 递归右子树，同上
+
+*代码实现：*
+
+```C++
+class Solution{
+public:
+    TreeNode* pre=nullptr;
+    
+    bool isValidBST(TreeNode* root){
+        if(root==nullptr) return true;
+        
+        bool left=isValidBST(root->left);
+        
+        if(pre!=nullptr && pre->val>=root->val) return false;
+        
+        bool right=isValidBST(root->right);
+        
+        return left&&right;
+    }
+};
+```
+
+### 迭代
+
+```C++
+class Solution{
+public:
+    bool isValidBST(TreeNode* root){
+        stack<TreeNode*> st;
+        TreeNode* cur=root;
+        TreeNode* pre=nullptr;
+        
+        while(cur || !st.empty()){
+            if(cur){
+                cur=cur->left;
+                st.push(cur);
+            }else{
+                cur=st.top();
+                st.pop();
+                
+                // 取中间节点的上一个节点，即左孩子节点
+                if(pre!=nullptr && pre->val>=cur->val)
+                    return false;
+                pre=cur;
+                
+                cur=cur->right;
+            }
+        }
+        
+        return true;
+    }
+};
+```
+
+---
+
