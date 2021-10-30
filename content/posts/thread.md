@@ -110,7 +110,7 @@ int main(){
     
     std::cout<<first.get_id()<,std::endl;
     
-    std::cout<<std::thread::hareware_concurrency()<<sstd::endl;
+    std::cout<<std::thread::hareware_concurrency()<<std::endl;
     
     return 0;
 }
