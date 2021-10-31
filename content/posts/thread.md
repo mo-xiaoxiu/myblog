@@ -127,6 +127,58 @@ Hello Thread!
 
 ---
 
+## 获取线程的返回值
+
+* `pthread_join()`：会一直调用阻塞它的线程值，直到目标函数执行结束（接收到目标线程的返回值）；不需要返回值，则将第二个参数设置为NULL
+
+* 返回值为 0 ，调用成功；返回值不为 0 ：（在头文件`errno.h`头文件中）
+
+  * EDEADLK：检测到线程发生了死锁。
+  * EINVAL：分为两种情况，要么目标线程本身不允许其它线程获取它的返回值，要么事先就已经有线程调用 pthread_join() 函数获取到了目标线程的返回值。
+  * ESRCH：找不到指定的 thread 线程。
+
+* 一个线程执行结束的返回值只能由一个 pthread_join() 函数获取，当有多个线程调用 pthread_join() 函数获取同一个线程的执行结果时，哪个线程最先执行 pthread_join() 函数，执行结果就由那个线程获得，其它线程的 pthread_join() 函数都将执行失败。
+
+  对于一个默认属性的线程 A 来说，线程占用的资源并不会因为执行结束而得到释放。而通过在其它线程中执行`pthread_join(A,NULL);`语句，可以轻松实现“及时释放线程 A 所占资源”的目的。 
+
+*代码测试：*
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<errno.h>
+
+void* Thread_1(void* arg){
+	printf("Thread_1 is beging!\n");
+	return "Thread_1 return.\n";
+}
+
+int main(){
+	pthread_t t1;
+	int res;
+	res = pthread_create(&t1,NULL,Thread_1,NULL);
+	if(res!=0) printf("Thread_1 create failed.\n");
+	
+	void* msg;
+	res = pthread_join(t1,&msg);
+	if(res!=0) printf("Thread_1 join failed!\n");
+	
+	printf("%s\n",(char*)msg);
+	
+	res = pthread_join(t1,&msg);
+	if(res == ESRCH){
+		printf("Thread_1 is joined before.\n");
+	}
+	return 0;
+}
+```
+
+---
+
+
+
+
+
 ## 终止线程
 
 线程终止的方式：
@@ -322,7 +374,162 @@ hello thread_1
 
 ---
 
+### pthread_cancel
 
+*代码测试：*
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<unistd.h>
+
+void* Thread_1(void* arg){
+	printf("Thread_1 is begining!\n");
+	sleep(5);
+}
+
+int main(){
+	pthread_t t1;
+	int res;
+	res = pthread_create(&t1,NULL,Thread_1,NULL);
+	if(res!=0){
+		printf("Thread_1 create failed.\n");
+	}
+	sleep(1);
+	
+	int res_1;
+	res_1 = pthread_cancel(t1);
+	if(res_1!=0){
+		printf("Thread_1 cancel failed.\n");
+	}
+	
+	int res_2;
+	void* msg;
+	res_2 = pthread_join(t1,&msg);
+	if(res_2!=0){
+		printf("Thread_1 join failed.\n");
+	}
+	//printf("%s\n",(char*)msg);
+	if(msg == PTHREAD_CANCELED){
+		printf("Thread_1 is exited by pthread_cancel.\n");
+	}else{
+		printf("Error!\n");
+	}
+	
+	return 0;
+}
+
+```
+
+pthread_cancel 语法：
+
+`int pthread_cancel(pthread_t thread)`：
+
+* 返回值如果为 0 ，说明发送终止线程信号成功；如果返回值不为 0 ，返回非 0 整数；对于因为*未找到目标线程*的失败，返回ESRCH宏（包含于头文件`errno.h`中，该宏的值为 3 ）
+* `pthread_t thread`：为想要终止的线程，发送终止信号之后，怎么处理时线程thread的事情
+* 接收到终止信号的线程，终止之后相当于调用了`pthread_exit(PTHREAD_CANCELED)`，返回宏`PTHREAD_CANCELED`在头文件`pthread.h`中
+
+
+
+### 使用 pthread_cancel 需要注意的
+
+使用`pthread_cancel`对某个线程发送终止信号，目标线程可以不作任何回应，也可能等到时机合适才会执行终止线程。合适的时机一般指的是**取消点**
+
+常见的取消点：
+
+* `pthread_join`
+* `pthread_testcancel`
+* `systerm`
+* `sleep`
+* .....
+
+当线程执行到这些函数（取消点）时，才会去处理接收到的终止线程的信号
+
+---
+
+
+
+
+
+在线程中，可以通过设置线程取消的状态来处理线程接收到终止信号之后的反应
+
+#### pthread_setcancelstate 
+
+pthread_setcancelstate可以让线程立即处理终止信号，也可以对于其他线程发来的终止信号不予理会
+
+`pthread_setcancelstate` 语法：
+
+* `int pthread_setcancelstate(int state,int *oldstate)`
+  * `state`：新的状态
+    * PTHREAD_CANCEL_ENABLE（默认值）：当前线程会处理其它线程发送的 Cancel 信号；
+    * PTHREAD_CANCEL_DISABLE：当前线程不理会其它线程发送的 Cancel 信号，直到线程状态重新调整为 PTHREAD_CANCEL_ENABLE 后，才处理接收到的 Cancel 信号。
+  * `*oldstate`：oldtate 参数用于接收线程先前所遵循的 state 值，通常用于对线程进行重置。如果不需要接收此参数的值，置为 NULL 即可
+* 返回值：成功返回 0 ，否则返回非 0 
+
+#### pthread_setcanceltype
+
+当线程会对 Cancel 信号进行处理时，我们可以借助 pthread_setcanceltype() 函数设置线程响应 Cancel 信号的**时机**
+
+`pthread_setcanceltype` 语法：
+
+* `int pthread_setcanceltype(int type,int *oldtype)`
+  * `type`：处理时机
+    * PTHREAD_CANCEL_DEFERRED（默认值）：当线程执行到某个可作为取消点的函数时终止执行；
+    * PTHREAD_CANCEL_ASYNCHRONOUS：线程接收到 Cancel 信号后立即结束执行。
+  * `*oldtype`：先前遵循的type值，如果不需要对其修改，则设置为NULL
+* 返回值：返回 0 成功；返回非 0 不成功
+
+*代码测试：*
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+
+void* Thread_1(void* arg){
+	printf("Thread_1 is begining!\n");
+	int res;
+	res = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
+	if(res!=0){
+		printf("Thread_1 set state failed!\n");
+		return NULL;
+	}
+	
+	res = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
+	if(res!=0){
+		printf("Thread_1 set typr failed!\n");
+		return NULL;
+	}
+	while(1);
+	return NULL;
+}
+
+int main(){
+	pthread_t t1;
+	int res = pthread_create(&t1,NULL,Thread_1,NULL);
+	if(res!=0){
+		printf("Thread_1 create failed.\n");
+	}
+	
+	res = pthread_cancel(t1);
+	if(res!=0){
+		printf("Thread_1 cancel failed!\n");
+	}
+	
+	void* thread_res;
+	res = pthread_join(t1,&thread_res);
+	if(res!=0){
+		printf("Thread_1 join failed.\n");
+	}
+	//printf("%s\n",(char*)thread_res);
+	if(thread_res == PTHREAD_CANCELED){
+		printf("Thread_1 is canceled by pthread_cancel.\n");
+	}
+	
+	return 0;
+}
+```
+
+---
 
 
 
