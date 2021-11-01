@@ -540,7 +540,7 @@ class Solution{
 
 ---
 
-## 前k个高频元素
+## 优先队列：前k个高频元素
 
 *原题链接：https://leetcode-cn.com/problems/top-k-frequent-elements/*
 
@@ -764,6 +764,139 @@ public:
             que.push(leftNode->right);
         }
         return true;
+    }
+};
+```
+
+---
+
+## 优先队列：有序矩阵中的第k小的值
+
+*原题链接：https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/*
+
+```
+给你一个 n x n 矩阵 matrix ，其中每行和每列元素均按升序排序，找到矩阵中第 k 小的元素。
+请注意，它是 排序后 的第 k 小元素，而不是第 k 个 不同 的元素。
+
+ 
+
+示例 1：
+
+输入：matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
+输出：13
+解释：矩阵中的元素为 [1,5,9,10,11,12,13,13,15]，第 8 小元素是 13
+示例 2：
+
+输入：matrix = [[-5]], k = 1
+输出：-5
+ 
+
+提示：
+
+n == matrix.length
+n == matrix[i].length
+1 <= n <= 300
+-109 <= matrix[i][j] <= 109
+题目数据 保证 matrix 中的所有行和列都按 非递减顺序 排列
+1 <= k <= n2
+
+```
+
+* 明确：矩阵左上角的数是最小的，右下角的数是最大的
+* 每次取出矩阵中的最小值，取到第k个元素即可
+* 所以想到可以使用优先队列
+
+**问题：如何保证每次从矩阵中取出的元素都是矩阵中最小的元素？**
+* 优先队列维护左边第一列的数据，这是矩阵中最小值的所有元素
+
+**问题：取出第一个最小元素后，第二个最小元素怎么确定？**
+* 取出最小值之后，第二个最小值有可能出现在队列中，也有可能出现在取出元素所在行的右边，所以只需要将取出最小值所在行的右边一个元素加入到队列中，让优先队列重新排序，得到的堆顶元素就是第二个最小值。后续以此类推
+
+**问题：如何确定矩阵中每个元素的值和位置，以及在加入或退出优先队列时元素的位置？**
+* 可以创建一个结构体，结构体中的成员维护矩阵中元素的x、y坐标位置，以及这个元素的值
+* 优先队列只需要维护这样的结构体变量即可
+
+
+
+*代码实现：*
+
+```C++
+class Solution{
+private:
+    struct Point{
+        int x;
+        int y;
+        int val;
+        Point(int val1,int x1,int y1):x(x1),y(y1),val(val1){}
+    };
+    
+public:
+    int kthSmallest(vector<vector<int>>& matrix,int k){
+    	int n=matrix.size();
+        
+        auto comp = [](Point p1,Point p2){ return p1.val>p2.val; };
+        priority_queue<Point,vector<Point>,decltype(Point)> pq(comp);
+        
+        for(int i=0;i<n;i++){
+            Point p(matrix[i][0],i,0);
+            pq.push(p);
+        }
+        for(int i=0;i<k-1;i++){
+            Point tmp = pq.top();
+            pq.pop();
+            if(tmp.y != n-1){
+                Point p(matrix[tmp.x][tmp.y+1],tmp.x,tmp.y+1);
+                pq.push(p);
+            }
+        }
+        
+        return pq.top().val;
+    }
+};
+```
+
+*注解版：*
+
+```C++
+class Solution {
+private:
+    // 写一个结构体：表示矩阵中元素的坐标及其值
+    struct Point{
+    int x;
+    int y;
+    int val;
+
+    Point(int val1,int x1,int y1):x(x1),y(y1),val(val1){}    
+    };    
+
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int n = matrix.size();
+
+        // 利用lambda函数写一个自己的比较函数，用于创建小根堆
+        auto comp = [](Point p1,Point p2){ return p1.val>p2.val; };
+        // 创建队列
+        priority_queue<Point,vector<Point>,decltype(comp)> pq(comp);
+
+        // 创建小根堆：将矩阵中的第一列初始化为优先队列
+        for(int i=0;i<n;i++){
+            Point p(matrix[i][0],i,0);
+            pq.push(p);
+        }
+
+        // 每次弹出优先队列中最小的元素，在横向加入元素，维护小根堆
+        for(int i=0;i<k-1;i++){
+            Point tmp = pq.top();
+            pq.pop();
+            // 判断横向是否有元素，有则加入到优先队列
+            if(tmp.y != n-1){
+                Point p(matrix[tmp.x][tmp.y+1],tmp.x,tmp.y+1);
+                pq.push(p);
+            }
+        }
+
+        // 最后返回第k小元素的值
+        return pq.top().val;
     }
 };
 ```
