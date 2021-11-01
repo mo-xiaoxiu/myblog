@@ -531,6 +531,99 @@ int main(){
 
 ---
 
+## 多线程的同步问题
+
+*代码测试：*
+
+这里创建了4个线程，分别对同一个变量 target_sum 进行修改：
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<unistd.h>
+
+int ticket_sum = 10;
+void *Bought(void* arg){
+	for(int i=0;i<10;i++){
+		if(ticket_sum>0){
+			sleep(1);
+			printf("%u sell num %d ticket.\n",pthread_self(),10-ticket_sum+1);
+			ticket_sum--;
+		}
+	}
+	return 0;
+}
+
+int main(){
+	pthread_t t[4];
+	
+	int res;
+	for(int i=0;i<4;i++){
+		res = pthread_create(&t[i],NULL,Bought,NULL);
+		if(res!=0) {
+			printf("Thread %d create failed!\n",i);
+			return 0;
+		}
+	}
+	
+	void* msg;
+	sleep(10);
+	for(int i=0;i<4;i++){
+		res = pthread_join(t[i],&msg);
+		if(res!=0){
+			printf("Thread %d join failed!\n",i);
+			return 0;
+		}
+	}
+	
+	
+	return 0;
+}
+```
+
+同一段代码，再Dev-C++上运行结果是这样的：
+
+```
+2 sell num 1 ticket.
+1 sell num 1 ticket.
+3 sell num 1 ticket.
+4 sell num 1 ticket.
+2 sell num 5 ticket.
+1 sell num 5 ticket.
+4 sell num 5 ticket.
+3 sell num 5 ticket.
+4 sell num 9 ticket.
+3 sell num 9 ticket.
+1 sell num 9 ticket.
+2 sell num 9 ticket.
+4 sell num 13 ticket.
+
+--------------------------------
+Process exited after 10.04 seconds with return value 0
+请按任意键继续. . .
+```
+
+在gcc下运行是这样的：
+
+```
+1723844352 sell num 1 ticket.
+1723844352 sell num 2 ticket.
+1723844352 sell num 3 ticket.
+1723844352 sell num 4 ticket.
+1723844352 sell num 5 ticket.
+1723844352 sell num 6 ticket.
+1723844352 sell num 7 ticket.
+1723844352 sell num 8 ticket.
+1723844352 sell num 9 ticket.
+1723844352 sell num 10 ticket.
+```
+
+我们通常将“多个线程同时访问某一公共资源”的现象称为“线程间产生了资源竞争”或者“线程间抢夺公共资源”，线程间竞争资源往往会导致程序的运行结果出现异常，感到匪夷所思，严重时还会导致程序运行崩溃。
+
+有几种解决方式：
+
+---
+
 
 
 # C++多线程
