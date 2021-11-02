@@ -790,6 +790,195 @@ Thread 0 join failed!
 
 ---
 
+## 信号量解决
+
+多线程程序中，使用信号量需遵守以下几条规则：
+
+1. 信号量的值**不能小于 0**；
+2. 有线程**访问资源**时，信号量执行**“减 1”**操作，访问**完成后再执行“加 1”**操作；
+3. 当信号量的值**为 0 **时，想访问资源的线程必须**等待**，直至信号量的值大于 0，等待的线程才能开始访问。
+
+* 信号量在头文件`semaphore.h`中：
+
+  ``#include<semaphore.h>`
+
+  `sem_t mySem;`
+
+* 初始化：
+
+  * 语法：`int sem_init(sem_t *sem,int pshared,usigned int value);`
+    * `sem`：要初始化的目标信号量
+    * `pshared`：表示该信号量是否与其他**进程**共享（其中，**1 表示共享；2 表示不共享**）
+    * `value`：信号量的初值
+  * 返回值：成功返回 0 ，不成功返回非零
+
+* 信号量的函数：
+
+  * `sem_post(sem_t* sem)`：信号量值加 1 ，唤醒其他线程
+  * `sem_wait(sem_t* sem)`：信号量值减 1 ，当**信号量为 0 时，`sem_wait()`会阻塞当前线程，直到函数执行`sem_post()`，线程才开始执行**
+  * `sem_trywait(sem_t* sem)`：功能与`sem_wait()`是一致的，只不过**当信号量为 0 时，`sem_trywait()不会阻塞当前线程，而是直接返回 -1 `**
+  * `sem_destroy(sem_t* sem)`：销毁信号量
+
+  以上函数执行成功，返回 0 ，否则返回非零数
+
+### 二进制的信号量
+
+**用于解决线程同步的问题：**
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<semaphore.h>
+#include<unistd.h>
+
+int ticket_sum = 10;
+sem_t mySem;
+
+void* Bought(void* arg){
+	printf("This is thread: %u\n",pthread_self());
+	int flag;
+	for(int i=0;i<10;i++){
+		flag = sem_wait(&mySem);
+		if(flag == 0){
+			if(ticket_sum>0){
+				sleep(1);
+				printf("Thread %u sell ticket %d\n",pthread_self(),10-ticket_sum+1);
+				ticket_sum--;
+			}
+			sem_post(&mySem);
+			sleep(1);
+		}
+	}
+
+	return "return\n";
+}
+
+int main(){
+	pthread_t t[4];
+	int res;
+	res = sem_init(&mySem,0,1);
+	if(res!=0){
+		printf("Sign init failed!\n");
+	}
+	for(int i=0;i<4;i++){
+		res = pthread_create(&t[i],NULL,Bought,NULL);
+		if(res!=0){
+			printf("Thread %u create failed!\n",pthread_self());
+			return 0;
+		}
+	}
+
+	sleep(10);
+	void* msg;
+	for(int i=0;i<4;i++){
+		res = pthread_join(t[i],&msg);
+		if(res!=0){
+			printf("Thread %u join failed!\n",pthread_self());
+			return 0;
+		}
+	}
+
+	sem_destroy(&mySem);
+
+	return 0;
+}
+
+```
+
+*代码运行结果如下：*
+
+```
+This is thread: 1152108288
+This is thread: 1143715584
+This is thread: 1135322880
+This is thread: 1160500992
+Thread 1152108288 sell ticket 1
+Thread 1143715584 sell ticket 2
+Thread 1135322880 sell ticket 3
+Thread 1160500992 sell ticket 4
+Thread 1152108288 sell ticket 5
+Thread 1143715584 sell ticket 6
+Thread 1135322880 sell ticket 7
+Thread 1160500992 sell ticket 8
+Thread 1152108288 sell ticket 9
+Thread 1143715584 sell ticket 10
+```
+
+### 计数信号量
+
+用于模拟多线程办理业务，可以有多线程同时访问同个资源
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<unistd.h>
+#include<semaphore.h>
+
+int num = 5;
+sem_t mySem;
+
+void* get_ser(void* arg){
+	int id = *((int*)arg);
+	if(sem_wait(&mySem)==0){
+		printf("Customer %d is servered!\n",id);
+		sleep(2);
+		printf("Customer %d is going!\n",id);
+		sem_post(&mySem);
+	}
+	return 0;
+}
+
+int main(){
+	pthread_t t[5];
+	int flag;
+	sem_init(&mySem,0,2);
+	for(int i=0;i<num;i++){
+		flag = pthread_create(&t[i],NULL,get_ser,&i);
+		if(flag!=0){
+			printf("Thread %u create failed!\n",pthread_self());
+			return 0;
+		}else{
+			printf("Customer %d is coming!\n",i);
+		}
+		sleep(1);
+	}
+
+	sleep(10);
+	void* msg;
+	for(int i=0;i<num;i++){
+		flag = pthread_join(t[i],&msg);
+		if(flag!=0){
+			printf("Thread %u join failed!\n",pthread_self());
+			return 0;
+		}
+	}
+
+	return 0;
+}
+```
+
+*代码运行结果如下：*
+
+```
+Customer 0 is coming!
+Customer 0 is servered!
+Customer 1 is coming!
+Customer 1 is servered!
+Customer 0 is going!
+Customer 2 is coming!
+Customer 2 is servered!
+Customer 1 is going!
+Customer 3 is coming!
+Customer 3 is servered!
+Customer 2 is going!
+Customer 4 is coming!
+Customer 4 is servered!
+Customer 3 is going!
+Customer 4 is going!
+```
+
+---
+
 
 
 # C++多线程
