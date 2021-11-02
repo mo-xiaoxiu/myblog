@@ -624,6 +624,172 @@ Process exited after 10.04 seconds with return value 0
 
 ---
 
+## 互斥锁解决
+
+* 定义在头文件`pthread.h`中
+
+* 定义互斥锁（互斥变量）：`pthread_mutex_t myMutex`
+
+  初始化互斥锁：
+
+  * 使用特定的宏：`pthread_mutex_t myMutex = PTHREAD_MUTEX_INITIALIZER;`
+  * 调用初始化的函数：`pthread_mutex_init(&myMutex,NULL);`
+
+  宏和调用的函数都在`pthread.h`头文件中，**主要区别**：
+
+  1. pthread_mutex_init() 函数可以自定义互斥锁的属性
+  2. 对于调用 malloc() 函数分配动态内存的互斥锁，只能使用`pthread_mutex_init()`
+
+  * `pthread_mutex_init()`语法：
+
+    `int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)`
+
+    mutex 参数表示要初始化的互斥锁；attr 参数用于自定义新建互斥锁的属性，attr 的值为 NULL 时表示以默认属性创建互斥锁
+
+    pthread_mutex_init() 函数成功完成初始化操作时，返回数字 0；如果初始化失败，函数返回非零数
+
+    **注意，不能对一个已经初始化过的互斥锁再进行初始化操作，否则会导致程序出现无法预料的错误**
+
+* “加锁” 与 “解锁”：
+
+  `pthread_mutex_lock(&myMutex)`：加锁
+
+  `pthread_mutex_trylock(&myMutex)`：加锁
+
+  `pthread_mutex_unlock(&myMutex)`：解锁
+
+  参数 mutex 表示我们要操控的互斥锁。函数执行成功时返回数字 0，否则返回非零数
+
+  **pthread_mutex_lock() 和 pthread_mutex_trylock() 的区别：**
+
+  * pthread_mutex_lock() 和 pthread_mutex_trylock() 函数都用于实现“加锁”操作，不同之处在于**当互斥锁已经处于“加锁”状态时**：
+    - 执行 pthread_mutex_lock() 函数会使线程进入等待（阻塞）状态，直至互斥锁得到释放；
+    - **执行 pthread_mutex_trylock() 函数不会阻塞线程，直接返回非零数（表示加锁失败）**
+
+* 互斥锁的“销毁”
+
+  **对于使用动态内存分配的互斥锁：**
+
+  `pthread_mutex_t myMutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));`
+
+  `pthread_mutex_init(&myMutex,NULL);`
+
+  **手动释放 myMutex 占用的内存（调用 free() 函数）之前，必须先调用 pthread_mutex_destory() 函数销毁该对象**
+
+  `pthread_mutex_destroy(&myMutex);`
+
+  `free(myMutex);`
+
+  * 语法：
+
+    `int pthread_mutex_destory(pthread_mutex_t *mutex);`
+
+    参数 mutex 表示要销毁的互斥锁。如果函数成功销毁指定的互斥锁，返回数字 0，反之返回非零数
+
+  * **注意，对于用 PTHREAD_MUTEX_INITIALIZER 或者 pthread_mutex_init() 函数直接初始化的互斥锁，无需调用 pthread_mutex_destory() 函数手动销毁**
+
+*代码测试：*
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<unistd.h>
+
+int ticket_sum = 10;
+pthread_mutex_t myMutex = PTHREAD_MUTEX_INITIALIZER;
+
+void* Bought(void* arg){
+	printf("This is thread :%d\n",pthread_self());
+	int isLock;
+	
+	if(ticket_sum>0){
+		isLock = pthread_mutex_lock(&myMutex);
+		if(isLock==0){
+			sleep(1);
+			printf("%u thread sell num %d ticket.\n",pthread_self(),10-ticket_sum+1);
+		}
+		isLock = pthread_mutex_unlock(&myMutex);
+		if(isLock==0){
+			printf("unlock!\n");
+		}
+		ticket_sum--;	
+	}
+
+
+	return "return";
+}
+
+int main(){
+	pthread_t t[4];
+	int res;
+	for(int i=0;i<10;i++){
+		res = pthread_create(&t[i % 4],NULL,Bought,NULL);
+		if(res!=0){
+			printf("Thread %d create failed!\n",(i%4));
+			return 0;
+		}
+	}
+
+	sleep(10);
+
+	for(int i=0;i<10;i++){
+		void* msg;
+		res = pthread_join(t[i%4],&msg);
+		if(res!=0){
+			printf("Thread %d join failed!\n",i%4);
+			return 0;
+		}
+		printf("msg = %s\n",(char*)msg);	
+	}
+
+	return 0;
+}
+
+```
+
+*代码运行结果：*
+
+```
+This is thread :1375082240
+This is thread :1366689536
+This is thread :1358296832
+This is thread :1349904128
+This is thread :1341511424
+This is thread :1333118720
+This is thread :1324726016
+This is thread :1316333312
+This is thread :1299547904
+This is thread :1307940608
+1375082240 thread sell num 1 ticket.
+unlock!
+1366689536 thread sell num 2 ticket.
+unlock!
+1358296832 thread sell num 3 ticket.
+unlock!
+1349904128 thread sell num 4 ticket.
+unlock!
+1341511424 thread sell num 5 ticket.
+unlock!
+1333118720 thread sell num 6 ticket.
+unlock!
+1324726016 thread sell num 7 ticket.
+unlock!
+1316333312 thread sell num 8 ticket.
+unlock!
+1299547904 thread sell num 9 ticket.
+unlock!
+1307940608 thread sell num 10 ticket.
+unlock!
+msg = return
+msg = return
+msg = return
+msg = return
+Thread 0 join failed!
+
+```
+
+---
+
 
 
 # C++多线程
