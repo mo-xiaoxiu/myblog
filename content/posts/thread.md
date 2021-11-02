@@ -979,6 +979,181 @@ Customer 4 is going!
 
 ---
 
+## 条件变量解决
+
+* 定义：
+
+  `#include<pthread.h>`
+
+  `pthread_cond_t myCond;`
+
+* 初始化：
+
+  1. `pthread_cond_t myCond = PTHREAD_COND_INITIALIZER;`
+
+  2. 语法：
+
+     `int pthread_cond_init(pthread_cond_t *cond, const pthreadattr_t attr);`
+
+     参数 cond 用于指明要初始化的条件变量；参数 attr 用于自定义条件变量的属性，通常我们将它赋值为 NULL，表示以系统默认的属性完成初始化操作。
+
+     pthread_cond_init() 函数初始化成功时返回数字 0，反之函数返回非零数。
+
+     > 当 attr 参数为 NULL 时，以上两种初始化方式完全等价。
+
+* 阻塞当前线程，等待条件成立
+
+  `int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);`
+
+  `int pthread_cond_timewait(pthread_cond_t *cond, pthread_mutex_t *mutex, const timespec* abstime);`
+
+  * cond 参数表示已初始化好的条件变量；mutex 参数表示与条件变量配合使用的互斥锁；abstime 参数表示阻塞线程的时间
+
+  * **abstime：绝对时间（记录系统时间 + 等待时间）**
+
+  调用两个函数之前，我们必须先创建好一个互斥锁并完成“加锁”操作，然后才能作为实参传递给 mutex 参数。两个函数会完成以下两项工作：
+
+  - 阻塞线程，直至接收到“条件成立”的信号；
+  - 当线程被添加到等待队列上时，将互斥锁“解锁”。
+
+
+  也就是说，**函数尚未接收到“条件成立”的信号之前，它将一直阻塞线程执行。注意，当函数接收到“条件成立”的信号后，它并不会立即结束对线程的阻塞，而是先完成对互斥锁的“加锁”操作，然后才解除阻塞**。
+
+  **两个函数的主要区别：**
+
+  * pthread_cond_wait() 函数可以**永久阻塞线程**，直到条件变量成立的那一刻；
+  * pthread_cond_timedwait() 函数**只能在 abstime 参数指定的时间内阻塞线程**，超出时限后，该函数将重新对互斥锁执行“加锁”操作，并解除对线程的阻塞，函数的返回值为 ETIMEDOUT。
+
+  如果**函数成功接收到了“条件成立”的信号，重新对互斥锁完成了“加锁”并使线程继续执行**，函数返回数字 0，反之则返回非零数
+
+* 解除阻塞状态
+
+  `int pthread_cond_signal(pthread_cond_t *cond);`
+
+  `int pthread_cond_broadcast(pthread_cond_t *cond);`
+
+  cond 参数表示初始化好的条件变量。当函数成功解除线程的“被阻塞”状态时，返回数字 0，反之返回非零数
+
+  **两个函数的主要区别：**
+
+  - pthread_cond_signal() 函数**至少解除一个**线程的“被阻塞”状态，如果等待队列中包含多个线程，**优先解除哪个线程将由操作系统的线程调度程序决定**；
+  - pthread_cond_broadcast() 函数可以解除等待队列中**所有**线程的“被阻塞”状态。
+
+  **由于互斥锁的存在，解除阻塞后的线程也不一定能立即执行。当互斥锁处于“加锁”状态时，解除阻塞状态的所有线程会组成等待互斥锁资源的队列，等待互斥锁“解锁”。**
+
+* 销毁条件变量
+
+  对于初始化好的条件变量，可以使用`pthread_cond_destroy()`销毁
+
+  * 语法：
+
+    `int pthread_cond_destroy(pthread_cond_t *cond);`
+
+    cond 参数表示要销毁的条件变量。如果函数成功销毁 cond 参数指定的条件变量，返回数字 0，反之返回非零数。
+
+    值得一提的是，销毁后的条件变量还可以调用 pthread_cond_init() 函数重新初始化后使用
+
+
+
+*代码测试：*
+
+```C++
+#include<stdio.h>
+#include<unistd.h>
+#include<pthread.h>
+
+int x = 0;
+pthread_mutex_t myMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t myCond = PTHREAD_COND_INITIALIZER;
+
+// wait
+void* waitForTrue(void* arg){
+	int res;
+	res = pthread_mutex_lock(&myMutex);
+	if(res!=0){
+		printf("waitForTrue lock failed!\n");
+		return NULL;
+	}
+	
+	printf("--------------wait for x --> 10---------------------\n");
+	if(pthread_cond_wait(&myCond,&myMutex)==0){
+		printf("x = %d\n",x);
+	}
+	
+	pthread_mutex_unlock(&myMutex);
+	return NULL;
+}
+
+// done
+void* doneForTrue(void* arg){
+	int res;
+	while(x!=10){
+		res = pthread_mutex_lock(&myMutex);
+		if(res == 0){
+			x++;
+			printf("doneForTrue x = %d\n",x);
+			sleep(1);
+			pthread_mutex_unlock(&myMutex);
+		}
+	}
+	
+	res = pthread_cond_signal(&myCond);
+	if(res!=0){
+		printf("pthread_cond_sign failed!\n");
+	}
+	return NULL;
+}
+
+
+int main(){
+	pthread_t t1,t2;
+	int res = pthread_create(&t1,NULL,waitForTrue,NULL);
+	if(res!=0){
+		printf("Thread 1 create failed!\n");
+		return 0; 
+	}
+	
+	res = pthread_create(&t2,NULL,doneForTrue,NULL);
+	if(res!=0){
+		printf("Thread 2 create failed!\n");
+		return 0;
+	}
+	
+	res = pthread_join(t1,NULL);
+	if(res!=0){
+		printf("Thread 1 join failed!\n");
+		return 0;
+	}
+	res = pthread_join(t2,NULL);
+	if(res!=0){
+		printf("Thread 2 join failed!\n");
+		return 0;
+	}
+	
+	pthread_cond_destroy(&myCond);
+	return 0;
+}
+```
+
+*代码运行结果：*
+
+```
+-------wait for x --> 10--------
+doneForTrue x = 1
+doneForTrue x = 2
+doneForTrue x = 3
+doneForTrue x = 4
+doneForTrue x = 5
+doneForTrue x = 6
+doneForTrue x = 7
+doneForTrue x = 8
+doneForTrue x = 9
+doneForTrue x = 10
+x = 10
+```
+
+---
+
 
 
 # C++多线程
