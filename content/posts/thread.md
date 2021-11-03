@@ -1154,6 +1154,189 @@ x = 10
 
 ---
 
+## 读写锁解决
+
+* 读写锁的核心思想是：将线程访问共享数据时发出的请求分为两种，分别是：
+  * 读请求：只读取共享数据，不做任何修改；
+  * 写请求：存在修改共享数据的行为
+
+| 当前读写锁的状态 | 线程发出“读”请求 | 线程发出“写”请求 |
+| ---------------- | ---------------- | ---------------- |
+| 无锁             | 允许占用         | 允许占用         |
+| 读锁             | 允许占用         | 阻塞线程执行     |
+| 写锁             | 阻塞线程执行     | 阻塞线程执行     |
+
+* 定义：
+
+  `pthread_rwlock_t myLock;`
+
+* 初始化：
+
+  * `pthread_rwlock_t myLock = PTHREAD_RWLOCK_INITIALIZER;`
+  * `int pthread_rwlock_init(pthread_rwlock_t *myLock, const pthread_rwlockattr_t *attr);`
+
+  rwlock 参数用于指定要初始化的读写锁变量；attr 参数用于自定义读写锁变量的属性，置为 NULL 时表示以默认属性初始化读写锁
+
+  当 pthread_rwlock_init() 函数初始化成功时，返回数字 0，反之返回非零数
+
+* **读锁请求**：
+
+  * `int pthread_rwlock_rdlock(pthread_rwlock_t *myLock);`
+  * `int pthread_rwlock_tryrdlock(pthread_rwlock_t *myLock);`
+
+  当读写锁处于“无锁”或者“读锁”状态时，以上两个函数都能成功获得读锁；当读写锁处于“写锁”状态时：
+
+  - pthread_rwlock_rdlock() 函数会阻塞当前线程，直至读写锁被释放；
+  - pthread_rwlock_tryrdlock() 函数不会阻塞当前线程，**直接返回 EBUSY**。
+
+  以上两个函数如果能成功获得读锁，函数返回数字 0，反之返回非零数
+
+* **写锁操作**：
+
+  * `int pthread_rwlock_wrlock(pthread_rwlock_t *myLock);`
+  * `int pthread_rwlock_trywrlock(pthread_rwlock_t *myLock);`
+
+  当读写锁处于“无锁”状态时，两个函数都能成功获得写锁；当读写锁处于“读锁”或“写锁”状态时：
+
+  - pthread_rwlock_wrlock() 函数将阻塞线程，直至读写锁被释放；
+  - pthread_rwlock_trywrlock() 函数不会阻塞线程，**直接返回 EBUSY**。
+
+  以上两个函数如果能成功获得写锁，函数返回数字 0，反之返回非零数
+
+* 释放读写锁
+
+  `int pthread_rwlock_destroy(pthread_rwlock_t *myLock);`
+
+  如果函数成功销毁指定的读写锁，返回数字 0，反之则返回非零数
+
+
+
+*代码测试：*
+
+```C++
+#include<stdio.h>
+#include<pthread.h>
+#include<unistd.h>
+
+int x = 0;
+pthread_rwlock_t myLock = PTHREAD_RWLOCK_INITIALIZER;
+
+// read
+void* read_thread(void* arg){
+	printf("-----This is read thread: %u\n",pthread_self());
+	while(1){
+		sleep(1);
+		pthread_rwlock_rdlock(&myLock);
+		printf("Thread %u is reading...   x = %d\n",pthread_self(),x);
+		sleep(1);
+		pthread_rwlock_unlock(&myLock);
+	}
+
+	return NULL;
+}
+
+// write
+void* write_thread(void* arg){
+	printf("--------This is write thread: %u\n",pthread_self());
+	while(1){
+		sleep(1);
+		pthread_rwlock_wrlock(&myLock);
+		++x;
+		printf("Thread %u is writing...   x = %d\n",pthread_self(),x);
+		sleep(1);
+		pthread_rwlock_unlock(&myLock);
+	}
+
+	return NULL;
+}
+
+int main(){
+	pthread_t r[5],w;
+	int res;
+	for(int i=0;i<5;i++){
+		res = pthread_create(&r[i],NULL,read_thread,NULL);
+		if(res!=0){
+			printf("Read thread: %d create failed!\n",i);
+			return 0;
+		}
+	}
+
+	res = pthread_create(&w,NULL,write_thread,NULL);
+	if(res!=0){
+		printf("Write thread create failed!\n");
+		return 0;
+	}
+
+	sleep(5);
+	for(int i=0;i<5;i++){
+		res = pthread_join(r[i],NULL);
+		if(res!=0){
+			printf("Read thread %d join failed!\n",i);
+			return 0;
+		}
+	}
+
+	res = pthread_join(w,NULL);
+	if(res!=0){
+		printf("Write thread join failed!\n");
+		return 0;
+	}
+
+	res = pthread_rwlock_destroy(&myLock);
+	if(res == 0){
+		printf("MyLock destroyed over!\n");	
+	}
+	return 0;
+}
+
+```
+
+*代码运行结果：*
+
+```
+-----This is read thread: 903649024
+-----This is read thread: 895256320
+--------This is write thread: 861685504
+-----This is read thread: 886863616
+-----This is read thread: 878470912
+-----This is read thread: 870078208
+Thread 903649024 is reading...   x = 0
+Thread 895256320 is reading...   x = 0
+Thread 886863616 is reading...   x = 0
+Thread 878470912 is reading...   x = 0
+Thread 870078208 is reading...   x = 0
+Thread 861685504 is writing...   x = 1
+Thread 870078208 is reading...   x = 1
+Thread 878470912 is reading...   x = 1
+Thread 886863616 is reading...   x = 1
+Thread 903649024 is reading...   x = 1
+Thread 895256320 is reading...   x = 1
+Thread 861685504 is writing...   x = 2
+Thread 870078208 is reading...   x = 2
+Thread 903649024 is reading...   x = 2
+Thread 895256320 is reading...   x = 2
+Thread 886863616 is reading...   x = 2
+Thread 878470912 is reading...   x = 2
+Thread 861685504 is writing...   x = 3
+Thread 886863616 is reading...   x = 3
+Thread 878470912 is reading...   x = 3
+Thread 895256320 is reading...   x = 3
+Thread 870078208 is reading...   x = 3
+Thread 903649024 is reading...   x = 3
+Thread 861685504 is writing...   x = 4
+Thread 903649024 is reading...   x = 4
+Thread 870078208 is reading...   x = 4
+Thread 895256320 is reading...   x = 4
+Thread 878470912 is reading...   x = 4
+Thread 886863616 is reading...   x = 4
+Thread 861685504 is writing...   x = 5
+Thread 878470912 is reading...   x = 5
+Thread 886863616 is reading...   x = 5
+// 下面通过 CTRL + C 停止运行
+```
+
+---
+
 
 
 # C++多线程
