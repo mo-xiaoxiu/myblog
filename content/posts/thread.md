@@ -1337,6 +1337,266 @@ Thread 886863616 is reading...   x = 5
 
 ---
 
+## 避免死锁
+
+* 使用互斥锁、信号量、条件变量和读写锁实现线程同步时，要注意以下几点：
+  * 占用**互斥锁**的线程，执行完成前必须及时**解锁**；
+  * 通过 **sem_wait()** 函数占用信号量资源的线程，执行完成前必须调用 **sem_post()** 函数及时释放；
+  * 当线程因**pthread_cond_wait()** 函数被阻塞时，一定要保证有其它线程**唤醒此线程**；
+  * 无论线程占用的是**读锁还是写锁**，都必须及时**解锁**。
+
+> 注意，函数中可以设置多种结束执行的路径，但无论线程选择哪个路径结束执行，都要保证能够将占用的资源释放掉。
+
+* POSIX 标准中，很多阻塞线程执行的函数都提供有 tryxxx() 和 timexxx() 两个版本，例如 pthread_mutex_lock() 和 pthread_mutex_trylock()、sem_wait() 和 sem_trywait()、pthread_cond_wait() 和 pthread_cond_timedwait() 等，它们可以完成同样的功能，但 tryxxx() 版本的函数不会阻塞线程，timexxx() 版本的函数不会一直阻塞线程。
+
+  实际开发中，建议您**优先选择 tryxxx() 或者 timexxx() 版本的函数，可以大大降低线程产生死锁的概率**。
+
+* 多线程程序中，**多个线程请求资源的顺序最好保持一致**。线程 t1 先请求 mutex 锁然后再请求 mutex2 锁，而 t2 则是先请求 mutex2 锁然后再请求 mutex 锁，这就是典型的因“请求资源顺序不一致”导致发生了线程死锁的情况。
+
+## 设置线程属性
+
+* 定义属性变量：
+
+  `#inlcude<pthread.h>`
+
+  `pthread_attr_t myAttr;`
+
+* 初始化语法：
+
+  `int pthread_attr_init(pthread_attr_t *myAttr);`
+
+  成功返回 0 ，否则返回非零数
+
+* 常用属性
+
+  * **__detachstate**
+
+    `int pthread_attr_setdetachstate(pthread_attr_t *myAttr, int detachstate);` 获取线程的分离属性
+
+    `int pthread_attr_getdetachstate(const pthread_attr_t *myAttr, int *detachstate);` 设置线程的分离属性
+
+    成功返回 0 ，否则返回非零数
+
+    **detachstate**有以下两个值：
+
+    * PTHREAD_CREATE_JOINABLE：线程执行完不会自动释放资源
+    * PTHREAD_CREATE_DETACHED：线程执行完会自动释放资源，后续不支持`pthread_join()`
+
+  * `int pthread_detach(pthread_t thread);` 分离线程
+
+  * **__schedpolicy**
+
+    指定线程的调度算法：
+
+    * SCHED_OTHER：（默认）分时调度（不支持设置优先级）
+    * SCHED_FIFO：先到先得（支持）
+    * SCHED_RR：轮转（支持）
+
+    `int pthread_attr_setschedpolicy(pthread_attr_t *myAttr, int policy);`
+
+    `int pthread_attr_getschedpolicy(const pthread_attr_t *myAttr, int *policy);`
+
+    成功返回 0 ，否则返回非零数
+
+  * **__schedparam**
+
+    设置线程的优先级
+
+    `int pthread_attr_setschedparam(pthread_attr_t *myAttr, const struct sched_param *p);`
+
+    `int pthread_attr_getschedparam(const pthread_attr_t *myAttr, struct sched_param *p)`
+
+    成功返回 0 ，否则返回非零数
+
+    * `param`：`sched_param`结构体变量，在头文件`sched.h`中，内部有一个`sched_priority`变量，表示线程优先级
+
+    * 当需要修改线程的优先级时，我们只需创建一个 sched_param 类型的变量并为其内部的 sched_priority 成员赋值，然后将其传递给 pthrerd_attr_setschedparam() 函数
+
+    * 不同的操作系统，线程优先级的值的范围不同，您可以通过调用如下两个系统函数获得当前系统支持的**最大和最小优先级的值**：
+
+      ```
+      int sched_get_priority_max(int policy);   //获得最大优先级的值
+      int sched_get_priority_min(int policy);   //获得最小优先级的值
+      ```
+
+      其中，policy 的值可以为 SCHED_FIFO、SCHED_RR 或者 SCHED_OTHER，当 policy 的值为 SCHED_OTHER 时，最大和最小优先级的值都为 0
+
+  * **__inheritsched**
+
+    `<pthread.h>` 头文件提供了如下两个函数，分别用于获取和修改 `__inheritsched `属性的值：
+
+    ```
+    //获取 __inheritsched 属性的值
+    int pthread_attr_getinheritsched(const pthread_attr_t *attr,int *inheritsched);
+    //修改 __inheritsched 属性的值
+    int pthread_attr_setinheritsched(pthread_attr_t *attr,int inheritsched);
+    ```
+
+    其中在 `pthread_attr_setinheritsched()` 函数中，`inheritsched` 参数的可选值有两个，分别是：
+
+    - PTHREAD_INHERIT_SCHED（默认值）：新线程的调度属性**继承自父线程**；
+    - PTHREAD_EXPLICIT_SCHED：新线程的调度属性**继承自 myAttr 规定的值**
+
+    成功返回 0 ，否则返回非零数
+
+  * **__scope**
+
+    `<pthread.h>` 头文件中提供了如下两个函数，分别用于获取和修改 __scope 属性的值：
+
+    ```
+    //获取 __scope 属性的值
+    int pthread_attr_getscope(const pthread_attr_t * attr,int * scope);
+    //修改 __scope 属性的值
+    int pthread_attr_setscope(pthread_attr_t * attr,int * scope);
+    ```
+
+    当调用 `pthread_attr_setscope()` 函数时，`scope` 参数的可选值有两个，分别是：
+
+    - PTHREAD_SCOPE_PROCESS：同一进程内争夺 CPU 资源；
+    - PTHREAD_SCOPE_SYSTEM：系统所有线程之间争夺 CPU 资源。
+
+    > Linux系统仅支持 PTHREAD_SCOPE_SYSTEM，即所有线程之间争夺 CPU 资源。
+
+    成功返回 0 ，否则返回非零数
+
+  * **__guardsize**
+
+    每个线程中，栈内存的后面都紧挨着一块空闲的内存空间，我们通常称这块内存为**警戒缓冲区**，它的功能是：**一旦我们使用的栈空间超出了额定值，警戒缓冲区可以确保线程不会因“栈溢出”立刻执行崩溃**。
+
+    `__guardsize` 属性专门用来设置警戒缓冲区的大小，`<pthread.h>` 头文件中提供了如下两个函数，分别用于获取和修改 __guardsize 属性的值：
+
+    ```
+    int pthread_attr_getguardsize(const pthread_attr_t *restrict attr,size_t *restrict guardsize);
+    int pthread_attr_setguardsize(pthread_attr_t *attr ,size_t *guardsize);
+    ```
+
+    pthread_attr_setguardsize() 函数中，设置警戒缓冲区的大小为参数 guardsize 指定的字节数
+
+    成功返回 0 ，否则返回非零数
+
+*代码示例：*
+
+```C++
+#include<stdio.h>
+//#include<stdlib.h>
+#include<pthread.h>
+#include<unistd.h>
+
+// thread_1
+void* Thread_1(void* arg){
+	printf("Thread_1 is begining...\n");
+	printf("I'm zjp.\n");
+	printf("Thread_1 over!\n");
+	return NULL;
+} 
+
+// thread_2 
+void* Thread_2(void* arg){
+	printf("Thread_2 is beging...\n");
+	printf("I'm what I am.\n");
+	printf("Thread_2 over!\n");
+	return NULL;
+}
+
+int main(int argc,char *argv[]){
+	int num_1,num_2,res;
+	pthread_t t1,t2;
+    // 创建优先级参数两个变量
+	struct sched_param p1,p2;
+    // 创建属性两个变量
+	pthread_attr_t myAttr_1,myAttr_2;
+	
+    // 判断传入的参数是否满足
+	if(argc!=3){
+		printf("未向程序传入2个表示优先级的数字\n");
+		return 0;
+	}
+	
+    // 初始化属性变量
+	res = pthread_attr_init(&myAttr_1);
+	if(res!=0){
+		printf("Init myAttr_1 failed!\n");
+	}
+	res = pthread_attr_init(&myAttr_2);
+	if(res!=0){
+		printf("Init myAttr_2 failed!\n");
+	}
+	
+    // 设置属性变量 1 的分离特性
+	res = pthread_attr_setdetachstate(&myAttr_1,PTHREAD_CREATE_DETACHED);
+	if(res!=0){
+		printf("MyAttr_1 set detachstate failed!\n");
+	}
+	
+    // 设置属性变量 1 的线程争夺属性
+	res = pthread_attr_setscope(&myAttr_1,PTHREAD_SCOPE_SYSTEM);
+	if(res!=0){
+		printf("MyAttr_2 set scope failed!\n");
+	}
+	// 设置属性变量 3 的线程争夺属性
+	res = pthread_attr_setschedpolicy(&myAttr_2,SCHED_FIFO);
+	if(res!=0){
+		printf("MyAttr_2 set policy failed!\n");
+	}
+	
+    // 设置属性变量 1 的线程继承关系
+	res = pthread_attr_setinheritsched(&myAttr_1,PTHREAD_EXPLICIT_SCHED);
+	if(res!=0){
+		printf("MyAttr_1 set_inheritsched failed!\n");
+	}
+	// 设置属性变量 2 的线程继承关系
+	res = pthread_attr_setinheritsched(&myAttr_2,PTHREAD_EXPLICIT_SCHED);
+	if(res!=0){
+		printf("MyAttr_2 set_inheritsched failed!\n");
+	}
+	
+    // 转化传入的参数
+	num_1 = atoi(argv[1]);
+	num_2 = atoi(argv[2]);
+	// 赋值于优先级变量中的 sched_priority变量
+	p1.sched_priority = num_1;
+	p2.sched_priority = num_2;
+	
+    // 设置传入属性的优先级
+	res = pthread_attr_setschedparam(&myAttr_1,&p1);
+	if(res!=0){
+		printf("param_1 setschedparam failed!\n");
+	}
+	res = pthread_attr_setschedparam(&myAttr_2,&p2);
+	if(res!=0){
+		printf("param_2 setschedparam failed!\n");
+	}
+	
+    // 创建线程
+	res = pthread_create(&t1,&myAttr_1,Thread_1,NULL);
+	if(res!=0){
+		printf("Thread_1 create failed!\n");
+	}
+	res = pthread_create(&t2,&myAttr_2,Thread_2,NULL);
+	if(res!=0){
+		printf("Thread_2 create failed!\n");
+	}
+	
+    // 等待阻塞线程
+	sleep(5);
+	res = pthread_join(t1,NULL);
+	if(res!=0){
+		printf("Thread_1 join failed!\n");
+	}
+	res = pthread_join(t2,NULL);
+	if(res!=0){
+		printf("Thread_2 join failed!\n");
+	}
+	
+	printf("main over!\n");
+	return 0;
+}	
+```
+
+
+
+---
+
 
 
 # C++多线程
