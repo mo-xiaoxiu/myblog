@@ -1634,6 +1634,11 @@ int main(){
 
 除了`join()`之外，还有`detach`方法：创建线程之后调用，线程会和主线程进行分离，后台执行，主线程不会被阻塞
 
+**以上两个函数选其一使用在多线程上，不然的话程序会产生问题：**
+
+* 子线程比主线程先结束
+* 线程执行完毕资源未释放，产生内存泄漏
+
 ```C++
 void fun(){
     while(1){
@@ -1710,4 +1715,170 @@ int main(){
     return 0;
 }
 ```
+
+`<thread>`头文件中不仅定义了 thread 类，还提供了一个名为 this_thread 的命名空间，此空间中包含一些功能实用的函数
+
+| 函数          | 功 能                                     |
+| ------------- | ----------------------------------------- |
+| get_id()      | 获得当前线程的 ID。                       |
+| yield()       | 阻塞当前线程，直至条件成熟。              |
+| sleep_until() | 阻塞当前线程，直至某个时间点为止。        |
+| sleep_for()   | 阻塞当前线程指定的时间（例如阻塞 5 秒）。 |
+
+*代码测试*
+
+```C++
+#include<iostream>
+#include<mutex>	// std::mutex mt;
+#include<chrono> // std::chrono::seconds(2)
+#include<thread>
+using namespace std;
+
+std::mutex mt;
+int x = 0;
+
+void thread_1(){
+	while(x<10){
+		mt.lock();
+		++x;
+		cout<<"ID = "<<std::this_thread::get_id()<<" "<<"x = "<<x<<endl;
+		mt.unlock();
+		std::this_thread::sleep_for(std::chrono::seconds(2)); // sleep_for()
+	}
+}
+
+int main(){
+	thread t1(thread_1);
+	thread t2(thread_1);
+
+	t1.join();
+	t2.join();
+	return 0;
+}
+
+```
+
+---
+
+## 互斥实现线程同步
+
+```C++
+#include<iostream>
+#include<thread>
+#include<mutex>
+#include<chrono> 
+using namespace std;
+
+int x = 0;
+std::mutex mt;
+
+void thread_1(){
+	while(x<10){
+		mt.lock();
+		++x;
+		cout<<"Thread ID: "<<std::this_thread::get_id()<<" "<<"x = "<<x<<endl;
+		mt.unlock();
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+	}
+}
+
+int main(){
+	thread t1(thread_1);
+	thread t2(thread_1);
+	
+	t1.join();
+	t2.join();
+	return 0;
+}
+```
+
+*代码运行结果：*
+
+```
+ID = 140226457417472 x = 1
+ID = 140226465810176 x = 2
+ID = 140226457417472 x = 3
+ID = 140226465810176 x = 4
+ID = 140226457417472 x = 5
+ID = 140226465810176 x = 6
+ID = 140226457417472 x = 7
+ID = 140226465810176 x = 8
+ID = 140226457417472 x = 9
+ID = 140226465810176 x = 10
+```
+
+----
+
+## 条件变量
+
+在头文件`<condition_variable>`中：需要与互斥锁搭配使用
+
+* `condition_variable`：示的条件变量只能和 **unique_lock** 类表示的互斥锁（可自行加锁和解锁）搭配使用
+* `condition_variable_any`：表示的条件变量可以和**任意类型的互斥锁**搭配使用（例如递归互斥锁、定时互斥锁等）
+
+**condition_variable**:
+
+| 成员函数     | 功 能                                                        |
+| ------------ | ------------------------------------------------------------ |
+| wait()       | 阻塞当前线程，等待条件成立。                                 |
+| wait_for()   | 阻塞当前线程的过程中，该函数**会自动调用 unlock() 函数解锁互斥锁**，从而令其他线程使用公共资源。**当条件成立或者超过了指定的等待时间（比如 3 秒），该函数会自动调用 lock() 函数对互斥锁加锁，同时令线程继续执行。** |
+| wait_until() | 和 wait_for() 功能类似，不同之处在于，wait_until() 函数可以设定一个具体时间点（例如 2021年4月8日 的某个具体时间），当条件成立或者等待时间超过了指定的时间点，函数会自动对互斥锁加锁，同时线程继续执行。 |
+| notify_one() | 向其中一个正在等待的线程发送“条件成立”的信号。               |
+| notify_all() | 向**所有等待**的线程发送“条件成立”的信号。                   |
+
+*代码：*
+
+```C++
+#include<iostream>
+#include<thread>
+#include<condition_variable>
+#include<chrono>
+
+std::mutex mt;
+std::condition_variable_any cond;
+
+void print_id(){
+	mt.lock();
+	cond.wait(mt);
+	std::cout<<"Thread ID: "<<std::this_thread::get_id()<<std::endl;
+	// wait
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+	mt.unlock();
+}
+
+void go(){
+	std::cout<<"go running......\n";
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+    // notify all waiting threads
+	cond.notify_all();
+}
+
+int main(){
+	std::thread t[4];
+	for(int i=0;i<4;i++){
+		t[i] = std::thread(print_id);
+	}
+
+	std::thread goThread(go);
+	goThread.join();
+
+	for(auto& th: t){
+		th.join();
+	}
+	return 0;
+}
+
+```
+
+*代码运行结果：*
+
+```
+go running......
+Thread ID: 140588095059712
+Thread ID: 140588086667008
+Thread ID: 140588078274304
+Thread ID: 140588103452416
+```
+
+---
 
