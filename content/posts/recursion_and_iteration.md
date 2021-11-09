@@ -1063,3 +1063,251 @@ public:
 
 ---
 
+## 二叉搜索树的最小绝对差
+
+*原题链接：https://leetcode-cn.com/problems/minimum-absolute-difference-in-bst/*
+
+```
+给你一个二叉搜索树的根节点 root ，返回 树中任意两不同节点值之间的最小差值 。
+
+差值是一个正数，其数值等于两值之差的绝对值。
+
+ 
+
+示例 1：
+
+
+输入：root = [4,2,6,1,3]
+输出：1
+示例 2：
+
+
+输入：root = [1,0,48,null,null,12,49]
+输出：1
+ 
+
+提示：
+
+树中节点的数目范围是 [2, 104]
+0 <= Node.val <= 105
+
+```
+
+### 递归
+
+#### 递归函数返回值及其参数
+
+* 返回值：由于需要直到所有结果，所以需要遍历一整棵树，所以不需要返回值（设置全局变量记录结果即可）
+* 参数：树的根节点
+
+#### 递归终止条件
+
+当访问到空节点时，返回
+
+#### 单层递归逻辑
+
+利用的是二叉搜索树的性质，这里可以使用中序遍历来使得遍历的元素有序
+可以记录当前遍历节点的前一个节点，实时计算差值，取最小值
+
+
+
+*代码实现：*
+
+```C++
+class Solution {
+public:
+    TreeNode* pre;
+    int res = INT_MAX;
+
+    void traversal(TreeNode* root){
+        if(root==nullptr) return;
+
+        // 左
+        if(root->left) traversal(root->left);
+        // 中
+        if(pre!=nullptr){
+            res = min(res, root->val-pre->val);
+        }
+        pre = root; // 更新前一个节点
+        // 右
+        if(root->right) traversal(root->right);
+    }
+
+    int getMinimumDifference(TreeNode* root) {
+        traversal(root);
+        return res;
+    }
+};
+```
+
+---
+
+### 迭代
+
+*类似于中序遍历的迭代写法：*
+
+```C++
+class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        stack<TreeNode*> st;
+        TreeNode* pre=nullptr;
+        int res = INT_MAX;
+        TreeNode* cur = root;
+        while(cur || !st.empty()){
+            if(cur){
+                st.push(cur);
+                cur=cur->left;
+            }else{
+                cur = st.top();
+                st.pop();
+                if(pre!=NULL){
+                    res = min(res, cur->val-pre->val);
+                }
+                pre = cur;
+                cur = cur->right;
+            }
+        }
+        return res;
+    }
+};
+```
+
+---
+
+## 二叉搜索树中的众数
+
+*原题链接：https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/*
+
+```
+给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
+
+假定 BST 有如下定义：
+
+结点左子树中所含结点的值小于等于当前结点的值
+结点右子树中所含结点的值大于等于当前结点的值
+左子树和右子树都是二叉搜索树
+例如：
+给定 BST [1,null,2,2],
+
+   1
+    \
+     2
+    /
+   2
+返回[2].
+
+提示：如果众数超过1个，不需考虑输出顺序
+
+进阶：你可以不使用额外的空间吗？（假设由递归产生的隐式调用栈的开销不被计算在内）
+
+```
+
+### 递归
+
+```C++
+class Solution {
+private:
+    // 前一个节点记录树节点的状态
+    TreeNode* pre;
+    // 记录树中元素出现次数最多的次数
+    int maxCount;
+    // 在遍历过程中用于记录元素出现次数（与maxCount相比较）
+    int count;
+    // 结果数组
+    vector<int>res;
+
+    void searchBST(TreeNode* root){
+        if(root==nullptr) return;
+        searchBST(root->left);  // 左
+
+        // 中
+        // 如果前一个节点为空：记录第一个节点
+        if(pre==nullptr){
+            count = 1;
+        // 如果与前一个节点值相等，则计数 +1
+        }else if(pre->val == root->val){
+            count++;
+        // 与前一个节点不相等，计数重新为 1
+        }else{
+            count = 1;
+        }
+        // 更新前一个节点
+        pre = root;
+
+        // 元素的数量与最大出现次数一致，说明这又是一个众数，放入结果数组
+        if(count == maxCount){
+            res.push_back(root->val);
+        }
+        // 遇到出现次数更大的元素，更新最大出现次数，清除之前记录的结果，放入新的结果（新的众数）
+        if(count>maxCount){
+            maxCount = count;
+            res.clear();
+            res.push_back(root->val);
+        }
+
+        searchBST(root->right);  // 右
+        return;
+    }
+public:
+    vector<int> findMode(TreeNode* root) {
+        // 先初始化
+        count = 0;
+        maxCount = 0;
+        searchBST(root);
+        pre = nullptr;
+        return res;
+    }
+};
+```
+
+---
+
+## 迭代
+
+```C++
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        stack<TreeNode*> st;
+        TreeNode* pre = nullptr;
+        int maxCount = 0;
+        int count = 0;
+        vector<int> res;
+        TreeNode* cur = root;
+        while(cur || !st.empty()){
+            if(cur){
+                st.push(cur);
+                cur=cur->left;
+            }else{
+                cur = st.top();
+                st.pop();
+
+                if(pre==nullptr){
+                    count = 1;
+                }else if(pre->val == cur->val){
+                    count++;
+                }else{
+                    count = 1;
+                }
+                pre = cur;
+
+                if(count==maxCount){
+                    res.push_back(cur->val);
+                }
+                if(count>maxCount){
+                    maxCount = count;
+                    res.clear();
+                    res.push_back(cur->val);
+                }
+
+                cur = cur->right;
+            }
+        }
+        return res;
+    }
+};
+```
+
+---
+
