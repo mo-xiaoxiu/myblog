@@ -148,3 +148,264 @@ private:
 
 ---
 
+# 键值映射
+
+*原题链接：https://leetcode-cn.com/problems/map-sum-pairs/submissions/*
+
+```C++
+实现一个 MapSum 类，支持两个方法，insert 和 sum：
+
+MapSum() 初始化 MapSum 对象
+void insert(String key, int val) 插入 key-val 键值对，字符串表示键 key ，整数表示值 val 。如果键 key 已经存在，那么原来的键值对将被替代成新的键值对。
+int sum(string prefix) 返回所有以该前缀 prefix 开头的键 key 的值的总和。
+ 
+
+示例：
+
+输入：
+["MapSum", "insert", "sum", "insert", "sum"]
+[[], ["apple", 3], ["ap"], ["app", 2], ["ap"]]
+输出：
+[null, null, 3, null, 5]
+
+解释：
+MapSum mapSum = new MapSum();
+mapSum.insert("apple", 3);  
+mapSum.sum("ap");           // return 3 (apple = 3)
+mapSum.insert("app", 2);    
+mapSum.sum("ap");           // return 5 (apple + app = 3 + 2 = 5)
+ 
+
+提示：
+
+1 <= key.length, prefix.length <= 50
+key 和 prefix 仅由小写英文字母组成
+1 <= val <= 1000
+最多调用 50 次 insert 和 sum
+
+```
+
+**思路：**
+
+首先看到题目，要求使用一个函数根据传入的参数作为前缀，查找到所有的单词并返回单词对应的值
+
+看到这里，我想到使用前缀树
+
+回顾了一下前缀树的构建和操作：
+
+* 首先是创建前缀树这个结构体：一个前缀树节点之下有一个用来存放26个字母节点的数组，还有一个标志着此节点之下路径上构不构成单词的bool标志
+* 初始化前缀树：将节点之下的数组26个节点位置全初始化为空，bool值全初始化为假
+* 在字典这个结构体里去创建和初始化前缀树的根节点，析构函数记得去释放这个节点
+* 字典的插入操作：遍历单词字符串，取出字符判断当前节点之下有没有创建好的字母节点，有则在此节点之下继续遍历单词字符串的下一个字符；没有则创建该节点，并在该节点之下继续遍历单词字符串......直到遍历到单词末尾，将当前节点标志为真，表示当前节点之上路径有单词
+* 单词的查找：遍历目标单词，取出字符判断在前缀树中是否有该节点，有则在该节点之下继续遍历目标单词；没有则直接返回假
+
+在这里不需要查找，而是做到除了能存储字符串之外，还要存放字符串对应的值；还需要能满足根据前缀向下查找到所有该前缀的单词的值，并计算加和
+
+**根据以上要求进行修改：**
+
+* 创建前缀树结构体：一个前缀树节点之下有一个用来存放26个字母节点的数组，**除去标志单词是否存在的标志为，直接使用记录当前单词的`int`值**，这样既能表示当前节点之上路径有没有单词，又可以记录节点值
+* 初始化前缀树：将节点之下的数组26个节点位置全初始化为空，**`int`的值全初始化为-1**
+* 在字典这个结构体里去创建和初始化前缀树的根节点，析构函数记得去释放这个节点
+* 字典的插入操作：遍历单词字符串，取出字符判断当前节点之下有没有创建好的字母节点，有则在此节点之下继续遍历单词字符串的下一个字符；没有则创建该节点，并在该节点之下继续遍历单词字符串......**直到遍历到单词末尾，记录当前节点的值为传入的`val`，表示当前节点之上路径有单词且记录了值**
+* **计算前缀单词加和：在前缀树中查找到前缀，在前缀对应的节点之下遍历所有子节点加和所有单词的值**
+
+上述的最后一步需要遍历所有子节点的情况，所以可以**使用`DFS`**
+
+**看看各个模块的实现**
+
+
+
+## 创建前缀树
+
+```C++
+class TrieTree{
+public:
+    TrieTree(): children(26, nullptr), val(-1) {}
+    ~TrieTree() {
+        for(auto& c: children) {
+            delete c;
+        }
+    }
+private:
+    vector<TrieTree*> children;
+    int val;
+};
+```
+
+## 键值映射内部实现
+
+```C++
+class MapSum{
+public:
+    // 创建前缀树
+    MapSum() {
+        this->root = new TrieTree();
+    }
+    
+    // 记得释放内存
+    ~MapSum() {
+        delete root;
+    }
+    
+private:
+    // 前缀树作为内部成员
+    TrieTree* root;
+    // 加和函数结果
+    int res = 0;
+};
+```
+
+## 插入操作
+
+```C++
+void insert(string key, int val) {
+    // 由指针接管遍历
+    TrieTree* ptr = root;
+    for(auto& k: key) {
+        if( !ptr->children[k-'a'] ) {
+            ptr->children[i] = new TrieTree();
+        }
+        ptr = ptr->children[i];
+    }
+    ptr->val = val;
+} // 如果没有节点则创建，在此新建节点下继续遍历；如果有则在此节点下继续遍历
+```
+
+## 计算加和
+
+```C++
+int sum (string prefix) {
+    TrieTree* ptr = root;
+    for(auto& c: prefix) {
+        if( ptr->children[c-'a'] ) {
+            ptr = ptr->children[c-'a'];
+        } else {
+            return 0;
+        }
+    } // 找到前缀
+    
+    // 在前缀向下遍历之前先将全局变量置为 0
+    res = 0;
+    
+    // 前缀位置为一个单词，计和
+    if( ptr->val!=-1 ) {
+        res += ptr->val;
+    }
+    
+    // DFS遍历
+    dfs (ptr);
+    
+    return res;
+}
+```
+
+## DFS
+
+```C++
+void dfs (TrieTree* ptr) {
+    if(ptr == nullptr) return nullptr;
+    
+    // 遍历所有的子节点情况
+    for(int i=0; i<26; i++) {
+        if( ptr->children[i] ) {
+            if( ptr->children[i]->val != -1 ) {
+                res += ptr->children[i]->val;
+            }
+            // 递归，回溯
+            dfs (ptr->children[i]);
+        }
+    }
+    
+    return;
+}
+```
+
+**完整代码实现：**(包含日志调试)
+
+```C++
+class TrieTree {
+public:
+    TrieTree():children(26, nullptr), val(-1) {}
+    ~TrieTree(){
+        for(auto& child: children) {
+            delete child;
+        }
+    }
+
+    vector<TrieTree*> children;
+    int val;    
+};
+
+class MapSum {
+public:
+    MapSum() {
+        this->root = new TrieTree();
+    }
+    ~MapSum() {
+        delete root;
+    }
+    
+    void insert(string key, int val) {
+        TrieTree* ptr = root;
+        for(auto& k: key) {
+            if(!ptr->children[k-'a']) {
+                ptr->children[k-'a'] = new TrieTree();
+            } 
+            ptr = ptr->children[k-'a'];
+        }
+        //cout<<"val="<<ptr->val<<endl;
+        ptr->val = val;
+        //cout<<"ptr->val="<<ptr->val<<endl;
+    }
+    
+    int sum(string prefix) {
+        TrieTree* ptr = root;
+        for(auto& c: prefix) {
+            if(ptr->children[c-'a']) {
+                ptr = ptr->children[c-'a'];
+            } else {
+                return 0;
+            }
+        }
+        res = 0;
+        //cout<<"ptr->val="<<ptr->val<<endl;
+        if(ptr->val!=-1) {
+            res += ptr->val;
+        }
+        
+        dfs(ptr);
+        //cout<<res<<endl;
+        //cout<<"--------"<<endl;
+        return res;
+    }
+
+    void dfs(TrieTree* ptr) {
+        if(ptr == nullptr) return;
+
+        for(int i=0;i<26;i++) {
+            if(ptr->children[i]) {
+                if(ptr->children[i]->val!=-1) {
+                    res += ptr->children[i]->val;
+                    //cout<<res<<"------"<<endl;
+                }
+                dfs(ptr->children[i]);
+            }
+        }
+        return;
+    }
+
+private:
+    TrieTree* root;
+    int res;
+};
+
+/**
+ * Your MapSum object will be instantiated and called as such:
+ * MapSum* obj = new MapSum();
+ * obj->insert(key,val);
+ * int param_2 = obj->sum(prefix);
+ */
+```
+
+---
+
