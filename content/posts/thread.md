@@ -808,7 +808,7 @@ Thread 0 join failed!
 
   * 语法：`int sem_init(sem_t *sem,int pshared,usigned int value);`
     * `sem`：要初始化的目标信号量
-    * `pshared`：表示该信号量是否与其他**进程**共享（其中，**1 表示共享；2 表示不共享**）
+    * `pshared`：表示该信号量是否与其他**进程**共享（其中，**1 表示共享；0 表示不共享**）
     * `value`：信号量的初值
   * 返回值：成功返回 0 ，不成功返回非零
 
