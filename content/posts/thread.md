@@ -1533,7 +1533,7 @@ int main(int argc,char *argv[]){
 	if(res!=0){
 		printf("MyAttr_2 set scope failed!\n");
 	}
-	// 设置属性变量 2 的线程争夺属性
+	// 设置属性变量 2 的线程调度算法属性
 	res = pthread_attr_setschedpolicy(&myAttr_2,SCHED_FIFO);
 	if(res!=0){
 		printf("MyAttr_2 set policy failed!\n");
