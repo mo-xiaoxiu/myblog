@@ -588,3 +588,89 @@ public:
 
 ---
 
+# 数学 + 进制
+
+## 可怜的小猪
+
+*原题链接：https://leetcode-cn.com/problems/poor-pigs/submissions/*
+
+```
+有 buckets 桶液体，其中 正好 有一桶含有毒药，其余装的都是水。它们从外观看起来都一样。为了弄清楚哪只水桶含有毒药，你可以喂一些猪喝，通过观察猪是否会死进行判断。不幸的是，你只有 minutesToTest 分钟时间来确定哪桶液体是有毒的。
+
+喂猪的规则如下：
+
+选择若干活猪进行喂养
+可以允许小猪同时饮用任意数量的桶中的水，并且该过程不需要时间。
+小猪喝完水后，必须有 minutesToDie 分钟的冷却时间。在这段时间里，你只能观察，而不允许继续喂猪。
+过了 minutesToDie 分钟后，所有喝到毒药的猪都会死去，其他所有猪都会活下来。
+重复这一过程，直到时间用完。
+给你桶的数目 buckets ，minutesToDie 和 minutesToTest ，返回在规定时间内判断哪个桶有毒所需的 最小 猪数。
+
+ 
+
+示例 1：
+
+输入：buckets = 1000, minutesToDie = 15, minutesToTest = 60
+输出：5
+示例 2：
+
+输入：buckets = 4, minutesToDie = 15, minutesToTest = 15
+输出：2
+示例 3：
+
+输入：buckets = 4, minutesToDie = 15, minutesToTest = 30
+输出：2
+ 
+
+提示：
+
+1 <= buckets <= 1000
+1 <= minutesToDie <= minutesToTest <= 100
+
+```
+
+**联想：**
+
+* 1000瓶水中有若干瓶毒药，需要多少小白鼠才能测得出来？
+  *答案：需要10只小白鼠。将1000瓶水利用二进制标号，可以使用`2^10=1024`来表示这1000瓶水，所以二进制数位数一共有10位，让10只小白鼠分别按列喝这标号10位的二进制的1000瓶水，某只小白鼠牺牲说明1000瓶水中毒药的二进制某一位为1（1表示喝了之后会g， 0表示不会）*，依次得出
+
+上面一只小白鼠可以携带的信息：2（非死即活）
+这里一只小猪可以携带的信息：5
+
+*原因：*
+
+在测试时间范围内
+
+1. 第一次：喝第一瓶，完
+2. 第二次：喝第二瓶，完
+3. 第三次：喝第三瓶，完
+4. 第四次：喝第四瓶，完
+5. 四次喝完都没事：第五瓶是毒药
+
+所以可以携带5种状态信息
+**所以60分钟内，每次测试时间为15分钟，一只小猪可以得到5种情况**
+
+结合以上的**联想**，可以得到：
+*`5^x=1000*  -->  *log5(1000)=x`*
+`x=5`
+所以需要5只小猪
+
+**由此可得到：**
+
+`logt(buckets)=result`
+`t=testTime/dieTime+1`
+
+```C++
+class Solution {
+public:
+    int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
+        int tastTime = minutesToTest / minutesToDie;
+        int looks = tastTime + 1;
+        // ceil 是向上取整
+        return ceil(log(buckets) / log(looks));
+    }
+};
+```
+
+---
+
