@@ -56,3 +56,16 @@ paginate = 8
   #  lightColor = "#d6d6d6"
   #  lightestColor = "#d3d3d3"
   #  primaryColor = "#ffffff"
+
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = "dracula"
+    tabWidth = 4
