@@ -10,7 +10,7 @@ draft: true
 
 **创建socket**
 
-```C++
+```cpp
 int sock_id = socket(int domain, int type, int protocol);
 ```
 
