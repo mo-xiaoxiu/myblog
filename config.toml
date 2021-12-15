@@ -58,14 +58,6 @@ paginate = 8
   #  primaryColor = "#ffffff"
 
 
-[markup]
-  [[markup.highlight]]
-    codeFences = true
-    guessSyntax = true
-    hl_Lines = ""
-    lineNoStart = 1
-    lineNos = false
-    lineNumbersInTable = true
-    noClasses = true
-    style = "dracula"
-    tabWidth = 4
+[markup.highlight]
+  style = 'manni' 
+  # 样式参考 https://swapoff.org/chroma/playground
