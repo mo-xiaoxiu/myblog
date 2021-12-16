@@ -1,73 +1,30 @@
-baseURL = 'https://myblog-gamma-olive.vercel.app/'
-title = 'ZJP'
-theme = "anatole"
-paginate = 8
+baseURL = "https://myblog-gamma-olive.vercel.app/"
+#languageCode = "en"
+#DefaultContentLanguage = "en"
+title = "Website of ZJP"
+themesDir = "themes"
+theme = "hugo-whisper-theme"
+# summarylength = 10
+# enableEmoji = true
+# enableRobotsTXT = true
 
-[menu]
-  [[menu.main]]
-    identifier = "home"
-    name = "Home"
-    url = "/"
-    weight = 1
-  #[[menu.main]]
-    #identifier = "tags"
-    #name = "Tags"
-    #url = "/tags/"
-    #weight = 2
-  #[[menu.main]]
-    #identifier = "about"
-    #name = "About"
-    #url = "\myblog\content\about\about.md"
-    #weight = 3
+# Enable Disqus
+#disqusShortname = ""
 
-[params]
-  author = "ZJPeng"
-  description = "Sharing knowledge...."
-  menu_item_separator = " - "
-  [[params.social]]
-    icon = "github"
-    name = "Github"
-    url = "https://github.com/mo-xiaoxiu/myblog"
-  [[params.social]]
-    icon = "twitter"
-    name = "Twitter"
-    url = "https://twitter.com/tkMhJW1bT7Zwof2"
+# Google Analytics
+#googleAnalytics = "UA-123-45"
 
-  # Default theme
-  #[params.style]
-  #  darkestColor = "#242930"
-  #  darkColor = "#353b43"
-  #  lightColor = "#afbac4"
-  #  lightestColor = "#ffffff"
-  #  primaryColor = "#57cc8a"
+# Syntax highlighting
+pygmentsUseClasses = true   
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
 
-  # Green theme
-  #[params.style]
-  #  darkestColor = "#315659"
-  #  darkColor = "#253031"
-  #  lightColor = "#96a879"
-  #  lightestColor = "#fff"
-  #  primaryColor = "#dad865"
+#[markup]
+#    [markup.goldmark]
+#        [markup.goldmark.renderer]
+#        unsafe=true
 
-  # Red theme
-  #[params.style]
-  #  darkestColor = "#d35050"
-  #  darkColor = "#212121"
-  #  lightColor = "#d6d6d6"
-  #  lightestColor = "#d3d3d3"
-  #  primaryColor = "#ffffff"
-
-
-[markup]
-  [markup.highlight]
-    anchorLineNos = false
-    codeFences = true
-    guessSyntax = false
-    hl_Lines = ''
-    lineAnchors = ''
-    lineNoStart = 1
-    lineNos = false
-    lineNumbersInTable = true
-    noClasses = true
-    style = 'monokai'
-    tabWidth = 4
+#[taxonomies]
+#    category = "categories"
+#    series = "series"
+#    tag = "tags"
