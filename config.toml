@@ -1,7 +1,11 @@
-baseURL = 'https://myblog-gamma-olive.vercel.app/'
-title = 'ZJP'
+baseURL = "https://myblog-gamma-olive.vercel.app/"
+languageCode = "en"
+DefaultContentLanguage = "en"
+title = "Website of ZJP"
 theme = "anatole"
-paginate = 8
+summarylength = 10
+enableEmoji = true
+enableRobotsTXT = true
 
 [menu]
   [[menu.main]]
