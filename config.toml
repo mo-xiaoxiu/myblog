@@ -1,29 +1,49 @@
-baseURL = "https://example.com"
+baseURL = "https://myblog-gamma-olive.vercel.app/"
 languageCode = "en"
 DefaultContentLanguage = "en"
-title = "Website of Jane Doe"
+title = "Website of ZJP"
 theme = "anatole"
 summarylength = 10
 enableEmoji = true
 enableRobotsTXT = true
 
-# Enable Disqus
-#disqusShortname = ""
+[menu]
+  [[menu.main]]
+  name = "Home"
+  identifier = "home"
+  weight = 100
+  url = "/"
 
-# Google Analytics
-#googleAnalytics = "UA-123-45"
+  [[menu.main]]
+  name = "Posts"
+  weight = 200
+  identifier = "posts"
+  url = "/post/"
 
-# Syntax highlighting
-pygmentsUseClasses = true   
-pygmentsCodeFences = true
-pygmentsCodefencesGuessSyntax = true
+  [[menu.main]]
+  name = "About"
+  weight = 300
+  identifier = "about"
+  url = "/about/"
+
+[params]
+  title = "ZJP's note"
+  author = "ZJP"
+  description = "Sharing knowledge"
+  profilePicture = "static/avatar.jpg"
+  displayMode = "dark"
+
 
 [markup]
-    [markup.goldmark]
-        [markup.goldmark.renderer]
-        unsafe=true
-
-[taxonomies]
-    category = "categories"
-    series = "series"
-    tag = "tags"
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = 'monokai'
+    tabWidth = 4
