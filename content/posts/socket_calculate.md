@@ -1,5 +1,5 @@
 ---
-title: "Socket编程--简单计算器的实现(test)"
+title: "Socket编程--简单计算器的实现"
 date: 2021-12-15T17:43:38+08:00
 draft: true
 ---
