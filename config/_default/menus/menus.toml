@@ -1,4 +1,17 @@
-[[post]]
+
+# 顶栏
+[[main]]
+  name = "文档"
+  url = "/docs/prologue/introduction/" #点击后跳转的落地页面
+  weight = 10
+
+[[main]]
+  name = "博客"
+  url = "/blog/"
+  weight = 20
+
+
+[[docs]]
   name = "还未分类"
   weight = 10
   identifier = "post"
@@ -17,16 +30,8 @@
   identifier = "help"
   url = "/docs/help/"
 
-[[main]]
-  name = "文档2"
-  url = "/docs/prologue/introduction/"
-# url = "/docs/1.0/prologue/introduction/"
-  weight = 10
 
-[[main]]
-  name = "博客"
-  url = "/blog/"
-  weight = 20
+
 
 [[social]]
   name = "GitHub"
