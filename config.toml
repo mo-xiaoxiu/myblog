@@ -1,6 +1,6 @@
 baseURL = 'https://myblog-gamma-olive.vercel.app/'
 title = 'ZJP'
-theme = "m10c"
+theme = "Doks"
 paginate = 8
 
 [menu]
