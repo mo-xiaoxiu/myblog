@@ -1,19 +1,9 @@
-[cn]
-  languageName = "Chinese"
-  contentDir = "content"
-  weight = 10
-  [cn.params]
-    languageISO = "CN"
-
-
 [en]
   languageName = "English"
   contentDir = "content/en"
   weight = 10
   [en.params]
     languageISO = "EN"
-
-
 
 [de]
   languageName = "German"
