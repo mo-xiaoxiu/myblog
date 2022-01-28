@@ -1,9 +1,9 @@
 
 # 顶栏
-#[[main]]
-#  name = "文档"
-#  url = "/docs/prologue/introduction/" #点击后跳转的落地页面
-#  weight = 10
+[[main]]
+  name = "文档"
+  url = "/docs/prologue/introduction/" #点击后跳转的落地页面
+  weight = 10
 
 [[main]]
   name = "博客"
