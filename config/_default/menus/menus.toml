@@ -1,3 +1,10 @@
+[[post]]
+  name = "还未分类"
+  weight = 10
+  identifier = "post"
+  url = "/docs/post/"
+
+
 [[docs]]
   name = "序言"
   weight = 10
