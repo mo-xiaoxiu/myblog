@@ -1,6 +1,6 @@
 [zh]
-  languageName = "English"
-  contentDir = "content/zh"
+  languageName = "Chinese"
+  contentDir = "content/"
   weight = 10
   [zh.params]
     languageISO = "ZH"
