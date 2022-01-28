@@ -8,8 +8,6 @@ draft: true
 
 ## Linux socket
 
-**zjp**
-
 **创建socket**
 
 ```cpp
