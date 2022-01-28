@@ -1,10 +1,10 @@
 # Meta Data for SEO
 
 ## Homepage
-title = "Doks"
+title = "ZJP"
 titleSeparator = "-"
-titleAddition = "Modern Documentation Theme"
-description = "Doks is a Hugo theme for building secure, fast, and SEO-ready documentation websites, which you can easily update and customize."
+titleAddition = "ZJP's note"
+description = "这里将会分享一些有关于C/C++的知识、数据结构与算法、以及一些其他我在日常学习生活中学到的知识。记录知识，认识生活，实行归类化记忆......"
 
 ## Documentation
 # docsVersion = "0.3"
@@ -46,15 +46,15 @@ siteLinksSearchBox = false
 themeColor = "#fff"
 
 # Images
-quality = 85
-bgColor = "#fff"
-landscapePhotoWidths = [900, 800, 700, 600, 500]
-portraitPhotoWidths = [800, 700, 600, 500]
-lqipWidth = "20x"
-smallLimit = "300"
+# quality = 85
+# bgColor = "#fff"
+# landscapePhotoWidths = [900, 800, 700, 600, 500]
+# portraitPhotoWidths = [800, 700, 600, 500]
+# lqipWidth = "20x"
+# smallLimit = "300"
 
 # Footer
-footer = "Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a>, and <a href=\"https://getdoks.org/\">Doks</a>"
+# footer = "Powered by <a href=\"https://www.netlify.com/\">Netlify</a>, <a href=\"https://gohugo.io/\">Hugo</a>, and <a href=\"https://getdoks.org/\">Doks</a>"
 
 # Feed
 copyRight = "Copyright (c) 2020-2021 Henk Verlinde"
