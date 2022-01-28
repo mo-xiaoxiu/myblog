@@ -1,6 +1,6 @@
 [en]
   languageName = "English"
-  contentDir = "content"
+  contentDir = "content/en"
   weight = 10
   [en.params]
     languageISO = "EN"
