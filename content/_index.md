@@ -1,7 +1,7 @@
 ---
-title : "Modern Documentation Theme"
-description: "Doks is a Hugo theme for building secure, fast, and SEO-ready documentation websites, which you can easily update and customize."
-lead: "Doks is a Hugo theme for building secure, fast, and SEO-ready documentation websites, which you can easily update and customize."
+title : "ZJP's Note"
+description: "这里将会分享一些有关于C/C++的知识、数据结构与算法、以及一些其他我在日常学习生活中学到的知识。记录知识，认识生活，实行归类化记忆......"
+lead: "这里将会分享一些有关于C/C++的知识、数据结构与算法、以及一些其他我在日常学习生活中学到的知识。记录知识，认识生活，实行归类化记忆......"
 date: 2020-10-06T08:47:36+00:00
 lastmod: 2020-10-06T08:47:36+00:00
 draft: false
