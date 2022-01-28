@@ -2,7 +2,7 @@
 # 顶栏
 [[main]]
   name = "blog"
-  url = "/docs/prologue/introduction/" #点击后跳转的落地页面
+  url = "/docs/自我介绍/introduction/" #点击后跳转的落地页面
   weight = 10
 
 #[[main]]
@@ -11,11 +11,11 @@
 #  weight = 20
 
 
-[[docs]]
-  name = "还未分类"
-  weight = 10
-  identifier = "post"
-  url = "/docs/post/"
+#[[docs]]
+#  name = "还未分类"
+#  weight = 10
+#  identifier = "post"
+#  url = "/docs/post/"
 
 
 #[[docs]]
