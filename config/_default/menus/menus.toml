@@ -1,9 +1,9 @@
 
 # 顶栏
-[[main]]
-  name = "文档"
-  url = "/docs/prologue/introduction/" #点击后跳转的落地页面
-  weight = 10
+#[[main]]
+#  name = "文档"
+#  url = "/docs/prologue/introduction/" #点击后跳转的落地页面
+#  weight = 10
 
 [[main]]
   name = "博客"
@@ -18,17 +18,17 @@
   url = "/docs/post/"
 
 
-[[docs]]
-  name = "序言"
-  weight = 10
-  identifier = "prologue"
-  url = "/docs/prologue/"
+#[[docs]]
+#  name = "序言"
+#  weight = 10
+#  identifier = "prologue"
+#  url = "/docs/prologue/"
 
-[[docs]]
-  name = "帮助"
-  weight = 60
-  identifier = "help"
-  url = "/docs/help/"
+#[[docs]]
+#  name = "帮助"
+#  weight = 60
+#  identifier = "help"
+#  url = "/docs/help/"
 
 
 
