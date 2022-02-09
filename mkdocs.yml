@@ -23,11 +23,11 @@ theme:
         icon: material/toggle-switch
         name: Switch to light mode
 
-  language: zh
-  # change logo
-  logo: logo/logo.png
-  # change favicon
-  favicon: logo/logo.png
+    language: zh
+    # change logo
+    logo: logo/logo.png
+    # change favicon
+    favicon: logo/logo.png
 
 # Extensions
 markdown_extensions:
