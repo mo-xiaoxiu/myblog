@@ -6,6 +6,16 @@ theme:
     name: material
     palette:
 
+    # changes colors
+    primary: black
+
+    # change logo
+    logo: logo/logo.png
+
+    # change favicon
+    favicon: logo/logo.png
+
+
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -37,6 +47,8 @@ markdown_extensions:
 #  - pymdownx.emoji:
 #      emoji_generator: !!python/name:pymdownx.emoji.to_svg
   # - admonition
+
+  # code highlight
   - toc:
       permalink: true
   - pymdownx.highlight:
