@@ -1,5 +1,5 @@
-site_name: 站点名字（请修改）
-repo_url: https://github.com/linyuxuanlin/Wiki-nonsense #（请修改为你自己的仓库地址）
+site_name: ZJP's Note
+repo_url: https://github.com/mo-xiaoxiu/myblog #（请修改为你自己的仓库地址）
 edit_uri: edit/main/docs/
 
 theme:
@@ -43,10 +43,3 @@ markdown_extensions:
 plugins:
   - search
   - roamlinks 
-
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
