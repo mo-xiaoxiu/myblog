@@ -50,7 +50,7 @@ theme:
 
     # github图标
     icon:
-      repo: fontawesome/brands/git-alt 
+      repo: logo/github.png 
 
 
 # Extensions
