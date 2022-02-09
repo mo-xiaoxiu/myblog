@@ -2,6 +2,19 @@ site_name: ZJP's Note
 repo_url: https://github.com/mo-xiaoxiu/myblog #（请修改为你自己的仓库地址）
 edit_uri: edit/main/docs/
 
+# 导航栏
+nav:
+  - Home: index.md
+  - 数据结构与算法:
+    - leetcode:
+      - 二叉树的先序、中序和后序遍历.md
+    - 数据结构与算法实现:
+      - List2.md
+  - C++:
+    - 内存管理.md
+    - 实现一个简单的空间配置器.md
+
+
 theme:
     name: material
     palette:
@@ -28,6 +41,13 @@ theme:
     logo: logo/logo.png
     # change favicon
     favicon: logo/logo.png
+    # 设置导航
+    features:
+    - navigation.tabs # 导航栏
+    - navigation.tracking # 锚点跟踪
+    - navigation.sections # 侧边栏目录显示
+    - navigation.expand # 侧边栏目录文件夹可折叠
+
 
 # Extensions
 markdown_extensions:
