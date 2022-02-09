@@ -48,6 +48,10 @@ theme:
     - navigation.sections # 侧边栏目录显示
     - navigation.expand # 侧边栏目录文件夹可折叠
 
+    # github图标
+    icon:
+      repo: fontawesome/brands/git-alt 
+
 
 # Extensions
 markdown_extensions:
