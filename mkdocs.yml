@@ -1,6 +1,6 @@
 site_name: ZJP's Note
 repo_url: https://github.com/mo-xiaoxiu/myblog #（请修改为你自己的仓库地址）
-edit_uri: edit/main/docs/
+edit_uri: "" #edit/main/docs/
 
 # 导航栏
 nav:
@@ -17,7 +17,7 @@ nav:
       - 数组知识点之滑动窗口.md
       - 数组知识点之数组元素归位.md
       - 数组知识点之双指针法.md
-      - 二维数组查找
+      - 二维数组查找.md
       - recursion_and_iteration.md
       - moore_vote.md
       - math.md
@@ -27,7 +27,7 @@ nav:
       - KMP.md
       - 螺旋矩阵.md
       - bag.md
-      - binaryTree.md
+      - binaryTree_2.md
     - 数据结构与算法实现:
       - implementation.md
       - List2.md
@@ -43,7 +43,7 @@ nav:
   - C++:
     - 内存管理.md
     - 实现一个简单的空间配置器.md
-    - 编译器计算.md
+    - 编译期计算.md
     - 内存对齐.md
     - design_pattern.md
     - RRTI.md
@@ -70,7 +70,7 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: white
-      accent: indigo
+      accent: red
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
@@ -98,7 +98,7 @@ theme:
 
     # github图标
     icon:
-      repo: logo/github.png 
+      repo: fontawesome/brands/git-square
 
 
 # Extensions
