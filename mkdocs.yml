@@ -6,9 +6,6 @@ theme:
     name: material
     palette:
 
-    # changes colors
-    primary: black
-
     # change logo
     logo: logo/logo.png
 
@@ -19,7 +16,7 @@ theme:
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: blue
+      primary: white
       accent: indigo
       toggle:
         icon: material/toggle-switch-off-outline
@@ -28,11 +25,13 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: blue
-      accent: blue
+      primary: black
+      accent: red
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
+
+  language: zh
 
 # Extensions
 markdown_extensions:
