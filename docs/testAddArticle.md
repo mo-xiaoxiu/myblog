@@ -1,7 +1,7 @@
 # 测试
 ## 测试基本写法
 
-``` cpp title = "test.cpp"
+```C++ title = "test.cpp"
 #include <iostream>
 using namespace std;
 
