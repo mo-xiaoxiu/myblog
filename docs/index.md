@@ -7,7 +7,8 @@ draft: true
 # 新的开始
 
 *微信公众号：墨小秀*
-![weixin](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E5%A2%A8%E5%B0%8F%E7%A7%80%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg)
+
+![weixin](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/墨小秀公众号二维码.jpg)
 
 
 ## 前言
