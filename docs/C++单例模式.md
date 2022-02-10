@@ -321,7 +321,11 @@ int main() {
     * std::is_nothrow_constructible<T, Args...>::value:
         * 1 -- true：类型T可以从Args构造
         * 0 -- false：类型T无法从Args构造
+
+
 测试程序
+
+
 ```cpp title="test.cpp"
 // is_nothrow_constructible example
 #include <iostream>
@@ -343,6 +347,7 @@ int main() {
   return 0;
 }
 ```
+
 *输出：*
 ```
 is_nothrow_constructible:
@@ -351,7 +356,9 @@ A(): true
 B(): false
 B(A): true
 ```
+
 *将上述B的构造函数设置为不跑出异常的*
+
 ```cpp title="将B构造函数设置为不跑出异常的"
 // is_nothrow_constructible example
 #include <iostream>
@@ -373,6 +380,7 @@ int main() {
   return 0;
 }
 ```
+
 *输出：*
 ```
 is_nothrow_constructible:
