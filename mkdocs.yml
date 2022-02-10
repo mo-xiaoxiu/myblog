@@ -60,6 +60,8 @@ nav:
     - smart_ptr.md
     - time.md
     - lambda.md
+    - 设计模式详解:
+      - C++单例模式.md
   - 网络编程:
     - Cookie_Session_Token.md
     - RSA_TLS三次握手.md
