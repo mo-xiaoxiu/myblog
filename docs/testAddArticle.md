@@ -12,3 +12,5 @@ int main(int argc, char* argv[]) {
 ```
 
 ## 测试插入图片
+this is a pic.
+https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/logo.png
