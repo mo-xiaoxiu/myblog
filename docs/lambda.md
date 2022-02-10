@@ -19,7 +19,7 @@ draft: true
 
 *实例代码：*
 
- ```cpp
+```cpp
 class A{
 public:
   A(){}
@@ -34,7 +34,7 @@ int main(){
   auto tmp_2=[](x)->int{return x};
   cout<<“tmp_1 = ”<<tmp_1<<“\n”<<“tmp_2 = ”<<tmp_2<<endl;
 }
- ```
+```
  
 
  lambda表达式和这里的仿函数是等价的
@@ -45,7 +45,7 @@ int main(){
 
  可以像局部函数那样使用它
 
- ```C++
+```C++
 int Dosomething(int);
 int DoWorks(int times){
   int i;
@@ -71,7 +71,7 @@ int DoWorks(int times){
     }
   }();
 }
- ```
+```
 
  *上述函数体内两个try（）catch语句实际上是一样的*
 
