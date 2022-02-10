@@ -70,6 +70,7 @@ nav:
     - study_makefile.md
   - 多线程编程:
     - thread.md
+  # 测试模块
   # - TEST:
     # - testAddArticle.md
 
