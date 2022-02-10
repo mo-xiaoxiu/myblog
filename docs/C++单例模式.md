@@ -216,6 +216,8 @@ deconstructor called.
     3. 子类继承基类，基类以子类类型为 T
     4. 子类将基类设置为友元类，以便于访问基类的构造函数（与 2 对应）
     5. 子类的构造函数设置为private
+
+
 ```cpp title="CRTP"
 #include <iostream>
 using namespace std;
@@ -263,6 +265,8 @@ int main() {
     1. **在基类中设置一个helper struct（空类）名为`token`，用于构建基类的局部静态变量**
     2. 子类可以将构造函数设置为public，前提是只允许`Derived(token)`构造
     *这样就不需要将基类在子类中设置为友元类*
+
+
 ```cpp title="don't need to declare base class as friend class"
 #include <iostream>
 using namespace std;
