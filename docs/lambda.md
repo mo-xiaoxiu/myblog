@@ -19,7 +19,7 @@ draft: true
 
 *实例代码：*
 
- ```C++
+ ```cpp
 class A{
 public:
   A(){}
@@ -35,6 +35,7 @@ int main(){
   cout<<“tmp_1 = ”<<tmp_1<<“\n”<<“tmp_2 = ”<<tmp_2<<endl;
 }
  ```
+ 
 
  lambda表达式和这里的仿函数是等价的
 
