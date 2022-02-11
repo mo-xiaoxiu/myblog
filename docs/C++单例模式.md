@@ -411,7 +411,7 @@ B(A): true
     * 基类：（模板）
         * 禁止赋值和拷贝
         * protected的`struct token {}` 用于辅助构造
-        * `static T& get_instance() noexcept(std::is_nothrow_constructible<T>::value)`：
+        * `static T& get_instance() noexcept(std::is_nothrow_constructible<T>::value)`：<br>
             函数体实现：<br>
             `static T instance{token()};`<br>
             `return instance;`
