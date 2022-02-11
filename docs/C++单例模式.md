@@ -412,8 +412,8 @@ B(A): true
         * 禁止赋值和拷贝
         * protected的`struct token {}` 用于辅助构造
         * `static T& get_instance() noexcept(std::is_nothrow_constructible<T>::value)`：
-            函数体实现：
-            `static T instance{token()};`
+            函数体实现：<br>
+            `static T instance{token()};`<br>
             `return instance;`
     * 子类：public继承子类类型的基类
         * 只允许`Derived(token)`构造，可以将其设置为public
