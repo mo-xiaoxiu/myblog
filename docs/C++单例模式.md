@@ -388,3 +388,36 @@ A(): true
 B(): true
 B(A): true
 ```
+<br>
+<br>
+<br>
+<br>
+
+## 总结
+1. 单例模式特点：类具有一个唯一的static成员，能通过static成员函数获取这个成员；
+2. 线程安全、无内存泄漏的懒汉式单例模式：在类中提供一个static成员函数在双检锁的保护下创建类的对象（new，使用智能指针管理对象）并返回
+3. 最推荐懒汉式单例模式：在类中提供一个static成员函数，在此成员函数中生成static局部变量并返回
+4. 一般的单例模板：
+    * 基类：（模板）
+        * 禁止赋值和拷贝
+        * 构造函数设置为protected
+        * virtual析构函数
+        * static成员函数返回static局部变量
+    * 子类：public继承子类类型的基类
+        * friend声明基类
+        * 构造函数设置为private
+        * 禁止赋值和拷贝
+5. 另一种单例模式：
+    * 基类：（模板）
+        * 禁止赋值和拷贝
+        * protected的`struct token {}` 用于辅助构造
+        * `static T& get_instance() noexcept(std::is_nothrow_constructible<T>::value)`：
+            函数体实现：
+            `static T instance{token()};`
+            `return instance;`
+    * 子类：public继承子类类型的基类
+        * 只允许`Derived(token)`构造，可以将其设置为public
+6. `std::is_nothrow_constructible<T, Args...>`用于检查类型T是否可以由参数表Args得出
+    * `std::is_nothrow_constructible<T, Args...>::value`
+        * 1：true_type
+        * 0：false_type
