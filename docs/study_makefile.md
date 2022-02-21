@@ -147,9 +147,80 @@ make支持三个通配符：
 
 ” * ”、“ ？”、“ [ ... ] ”
 
+*注意：“~”：”~test“表示当前$HOME目录下test目录*
+
+**例子1：**
+
+```makefile
+clean:
+	rm -f  *.o
+```
+
+删除所有的.o文件
+
+**例子2：**
+
+```makefile
+print: *.c
+	lpr -p $?
+	touch print
+```
+
+目标print依赖于所有的.c文件；$?是一个**自动化变量**
+
+**例子3：**
+
+```makefile
+object = *.o #makefile中的变量就是C/C++中的宏，所以这里表示的是文件名 *.o
+```
+
+```makefile
+object := $(wildcard *.o) #关键字wildcard，这里才是表示以变量object代表所有的.o文件
+```
+
+## 文件搜寻
+
+当make需要去找寻文件的依赖关系时，你可以在文件前加上路径，但最好的方法是把一个路径告诉make，让make在自动去找
+
+Makefile文件中的特殊变量“VPATH”就是完成这个功能的，如果没有指明这个变量，make只会在当前的目录中去找寻依赖文件和目标文件。如果定义了这个变量，那么，make就会在当当前目录找不到的情况下，到所指定的目录中去找寻文件了
+
+```makefile
+VPATH = src:../headers
+# 指定了两个目录”src“和”../header“，make会按照这个顺序搜索。注意：当前目录还是搜索的最高优先级
+```
+
+**vpath（全小写）关键字**
+
+1、vpath <pattern> <directories>
+
+为符合模式<pattern>的文件指定搜索目录<directories>
+
+2、vpath <pattern>
+
+清除符合模式<pattern>的文件的搜索目录
+
+3、vpath
+
+清除所有已被设置好了的文件搜索目录。
+
+*<pattern>中需包含”%“，”%“表示匹配**一个或者多个**字符*
+
+```makefile
+# 要求make在“../headers”目录下搜索所有以“.h”结尾的文件。（如果某文件在当前目录没有找到的话）
+vpath %.h ../headers
+```
+
+```makefile
+# 表示“.c”结尾的文件，先在“foo”目录，然后是“blish”，最后是“bar”目录
+vpath %.c foo
+vpath % blish
+vpath %.c bar
+```
+
+```makefile
+# 表示“.c”结尾的文件，先在“foo”目录，然后是“bar”目录，最后才是“blish”目录
+vpath %.c foo:bar
+vpath % blish
+```
+
 ---
-
-
-
-*更新中...*
-
