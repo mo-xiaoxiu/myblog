@@ -31,9 +31,9 @@
 ## epoll_ctl
 这里以*添加*为例：<br>
 在使用 epoll_ctl 注册每一个 socket 的时候，内核会做如下三件事情<br>
-1. 分配一个红黑树节点对象 epitem，
-2. 添加等待事件到 socket 的等待队列中，其回调函数是 ep_poll_callback
-3. 将 epitem 插入到 epoll 对象的红黑树里
+1. 分配一个红黑树节点对象 epitem<br>
+2. 添加等待事件到 socket 的等待队列中，其回调函数是 ep_poll_callback<br>
+3. 将 epitem 插入到 epoll 对象的红黑树里<br>
 <br>
 
 ### 初始化epitem
