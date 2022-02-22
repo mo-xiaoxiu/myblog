@@ -103,6 +103,8 @@ clean:
 void hello();
 ```
 
+<br>
+
 ```cpp title="hello.c"
 #include "hello.h"
 #include <stdio.h>
@@ -116,6 +118,7 @@ void hello() {
 
 可以在其他模块中通过**包含头文件**的方式使用这个模块
 
+
 ```cpp title="main.c"
 #include "hello.h"
 
@@ -126,6 +129,7 @@ int main() {
 ```
 
 以上可以通过如下gcc的命令编译执行：
+
 
 ```
 gcc -c hello.c -o hello.o
