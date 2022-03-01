@@ -71,7 +71,7 @@ nav:
       - http连接处理:
         - epoll.md
     - 网络编程:
-      - selet_poll_epoll.md
+      - select_poll_epoll.md
       - socket_calculate.md
   - 网络:
     - Cookie_Session_Token.md
