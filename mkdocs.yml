@@ -50,6 +50,7 @@ nav:
       - 队列:
         - queue.md   
   - C++:
+    - const重载.md
     - C项目的构建.md
     - 内存管理.md
     - 实现一个简单的空间配置器.md
