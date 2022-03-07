@@ -87,6 +87,9 @@ nav:
     - MYSQL_C_API.md
   - 多线程编程:
     - thread.md
+  - 数据库:
+    - 数据库笔记.md
+    
   # 测试模块
   # - TEST:
     # - testAddArticle.md
