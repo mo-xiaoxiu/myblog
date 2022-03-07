@@ -73,6 +73,7 @@ nav:
         - 知识储备:
           - epoll.md
           - one_loop_one_thread.md
+          - 有限状态机.md
     - 网络编程:
       - select_poll_epoll.md
       - socket_calculate.md
@@ -89,7 +90,7 @@ nav:
     - thread.md
   - 数据库:
     - 数据库笔记.md
-    
+
   # 测试模块
   # - TEST:
     # - testAddArticle.md
