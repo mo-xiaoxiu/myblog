@@ -86,6 +86,7 @@ nav:
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
   - 其他:
+    - UML类图.md
     - study_makefile.md
     - MYSQL_C_API.md
   - 多线程编程:
