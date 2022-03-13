@@ -172,3 +172,119 @@ $$=42858
 100
 ```
 
+### 数组
+
+#### 定义数组
+
+ep:
+```
+arr=(one two three)
+```
+
+输出元素的时候：
+
+```
+echo ${arr[0]}
+echo ${arr[1]}
+echo ${arr[2]}
+echo ${arr[3]}
+```
+
+*在命令行输出分别为：*
+
+```
+[zjp@localhost 变量]$ arr=(one two three)
+[zjp@localhost 变量]$ echo ${arr[0]}
+one
+[zjp@localhost 变量]$ echo ${arr[1]}
+two
+[zjp@localhost 变量]$ echo ${arr[2]}
+three
+[zjp@localhost 变量]$ echo ${arr[3]}
+
+```
+
+**可以发现，输出数组越界为空**
+
+再定义一个超出数组范围的数组元素：
+
+```
+arr[6]=five
+```
+
+然后尝试输出所有元素：
+
+```
+...
+echo ${arr[2]}
+echo ${arr[3]}
+echo ${arr[4]}
+echo ${arr[5]}
+echo ${arr[6]}
+```
+
+*输出结果为：*
+
+```
+[zjp@localhost 变量]$ arr[6]=five
+[zjp@localhost 变量]$ echo ${arr[2]}
+three
+[zjp@localhost 变量]$ echo ${arr[3]}
+
+[zjp@localhost 变量]$ echo ${arr[4]}
+
+[zjp@localhost 变量]$ echo ${arr[5]}
+
+[zjp@localhost 变量]$ echo ${arr[6]}
+five
+```
+
+可以发现，自动扩张了数组，并且哉没有赋值的元素位置输出为空
+
+此时，输出所有元素看一下元素的连续性：
+
+```
+echo ${arr[*]}
+```
+
+*输出如下：*
+
+```
+[zjp@localhost 变量]$ echo ${arr[*]}
+one two three five
+```
+
+可以发现，元素的输出是不连续的。可以猜想，元素的个数也是仅仅只计算有元素值的数组个数：
+
+```
+echo ${#arr[*]}
+```
+
+*输出如下：*
+
+```
+[zjp@localhost 变量]$ echo ${#arr[*]}
+4
+```
+
+验证正确
+
+#### 重新赋值
+
+还可以对数组进行重新赋值
+
+在上述语句执行情况下继续执行：
+
+```
+arr[0] = zero
+echo ${arr[0]}
+```
+
+*输出如下：*
+
+```
+[zjp@localhost 变量]$ arr[0]=zero
+[zjp@localhost 变量]$ echo ${arr[0]}
+zero
+```
+
