@@ -1,5 +1,49 @@
 # shell教程
 
+## 初始sell
+
+1. 编写一个shell脚本输出`hello world`
+
+   ```shell title="helloworld.sh"
+   #!/bin/bash
+   
+   echo "hello world!"
+   ```
+
+   在命令行窗口执行`bash helloworld.sh`或者`sh helloworld`，运行该脚本：
+
+   输出`hello world!`
+
+   还有一种执行方式，可以使用`./helloworld`，只不过需要给脚本加上可执行权限：
+
+   ```
+   chmod +x helloworld.sh
+   ```
+
+   或者是：
+
+   ```
+   chmod 777 helloworld.sh
+   ```
+
+   再在窗口执行`./helloworld.sh`即可输出
+
+2. 编写一个shell脚本，要求在当前目录下创建一个文本，并在文本中写入“I love coding.”
+
+   ```shell title="createAndWrite.sh"
+   #!/bin/bash
+   
+   cd . # 进入当前目录
+   ls   # 如果你想的话，可以随意在这里进行执行一些命令
+   touch a.txt  # 创建了一个叫做a.txt的文本
+   
+   echo "I love coding." >> a.txt  # >> 表示追加内容到a.txt这个文本的后面
+   ```
+
+   在命令行窗口执行`bash createAndWrite.sh`，在当前目录下生成`a.txt`文件，并且在命令行窗口输出命令`ls`的内容，可以使用`cat a.txt`来查看是否将内容写入文本中
+
+
+
 ## the first day
 
 ### 变量
