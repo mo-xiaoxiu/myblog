@@ -332,3 +332,272 @@ echo ${arr[0]}
 zero
 ```
 
+
+
+
+
+
+
+## the second day
+
+### 输入
+
+* read var：读取变量var，输入内容到var中
+
+```
+[zjp@localhost ~]$ read var
+abc
+[zjp@localhost ~]$ echo $var
+abc
+```
+
+* 在命令行窗口单独输入read，输入的内容会被保存到内置的变量`REPLY`
+
+```
+[zjp@localhost ~]$ read
+abd
+[zjp@localhost ~]$ echo $REPLY
+abd
+```
+
+* read -a 表示将标准输入内容输入到数组中
+
+```
+[zjp@localhost ~]$ read -a arr 
+1 2 3
+[zjp@localhost ~]$ echo ${arr[*]}
+1 2 3
+```
+
+* read -p "print the message " -t [num] 表示输出提示符内容，在设置的超时时间之内将标准输入内容输入到后续跟的某个变量中
+
+```
+[zjp@localhost ~]$ read -p "please input: " -t 10 -a arr
+please input: 1 2 3
+[zjp@localhost ~]$ echo ${arr[*]}
+1 2 3
+```
+
+*注意：-t 表示timeout，单位为s*
+
+### 输出
+
+* echo -n：表示输出内容时不需要换行
+
+```
+[zjp@localhost ~]$ echo -n $var
+abc[zjp@localhost ~]$ 
+```
+
+* -e选项对于echo \t 和 echo "\t"
+
+`echo \t`会被命令行解析为输出t，不会对其进行转义
+
+`echo "\t"`同样不会对其进行转义，直接输出双引号之间的内容
+
+`echo -e \t`还是会被解析为t
+
+`echo -e "\t"`会将双引号中的\t解析为制表符
+
+```
+[zjp@localhost ~]$ echo \t
+t
+[zjp@localhost ~]$ echo "\t"
+\t
+[zjp@localhost ~]$ echo -e \t
+t
+[zjp@localhost ~]$ echo -e "\t"
+	
+[zjp@localhost ~]$ echo -e "\t"AAA
+	AAA
+```
+*-e：表示对后续双引号之间的内容进行转义*
+
+* 单引号、双引号和反引号的区别
+
+**单引号：忽略所有特殊字符**
+
+```
+[zjp@localhost ~]$ x=*
+[zjp@localhost ~]$ echo $x
+公共 模板 视频 图片 文档 下载 音乐 桌面 cplusplus_designedPattern sometask.txt test tinyhttpd TinyWebServer
+[zjp@localhost ~]$ echo '$x'
+$x
+```
+
+*由于忽略所以符号，所以这里的$是一个普通的符号*
+
+*注意：echo `*` 是打印当前目录下的所有文件名*
+
+**双引号：忽略大多数字符，除了$和`之外**
+
+```
+[zjp@localhost ~]$ x=*
+[zjp@localhost ~]$ echo $x
+公共 模板 视频 图片 文档 下载 音乐 桌面 cplusplus_designedPattern sometask.txt test tinyhttpd TinyWebServer
+[zjp@localhost ~]$ echo "$x"
+*
+```
+
+*由于不忽略$符号，所以这里的$x会被解析为x变量*
+
+```
+[zjp@localhost ~]$ y=^
+[zjp@localhost ~]$ echo $y
+^
+[zjp@localhost ~]$ echo "`y"
+> 
+
+```
+
+*上述是一个不忽略反引号的例子*
+
+**反引号：命令替换**
+
+```
+[zjp@localhost test]$ pwd
+/home/zjp/test
+[zjp@localhost test]$ echo `pwd`
+/home/zjp/test
+[zjp@localhost test]$ ls
+array               Disjoint_set  lambda_test            py_spider     study_shell
+C                   DNS           list                   queue         TCP_IP
+C_file              gdb_test      plus                   shared_count  test
+circle_queue        hello         poll_epoll             socket_op     test_strcasecmp
+cpp_const_override  hello_1       process                sort          thread_test
+design_pattern      hton_ntoh     process_communication  stack         UDP
+[zjp@localhost test]$ echo `ls`
+array C C_file circle_queue cpp_const_override design_pattern Disjoint_set DNS gdb_test hello hello_1 hton_ntoh lambda_test list plus poll_epoll process process_communication py_spider queue shared_count socket_op sort stack study_shell TCP_IP test test_strcasecmp thread_test UDP
+```
+
+* `$()` 等价于上述的反引号对于命令的替换
+
+```
+[zjp@localhost test]$ echo `pwd`
+/home/zjp/test
+[zjp@localhost test]$ echo $(pwd)
+/home/zjp/test
+```
+
+* basename 和 dirname
+
+basename输出路径的最后一个
+
+dirname输出除了路径的最后一个的全部路劲
+
+```
+[zjp@localhost test]$ dirname /ho/zjp/peng
+/ho/zjp
+[zjp@localhost test]$ basename /ho/zjp/peng
+peng
+```
+
+*注意：此处路径不一定合法*
+
+**ep：** 使用echo对basename的内容进行输出
+
+*注意：对于内置的符号需要转义的；对于反引号在内容中需要转义，而$()不需要*
+
+```
+[zjp@localhost test]$ echo `basename \`pwd\``
+test
+[zjp@localhost test]$ echo $(basename `pwd`)
+test
+[zjp@localhost test]$ echo $(basename $(pwd))
+test
+```
+
+### 算术运算符
+
+算术运算符
+
+![算术运算符](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6.jpg)
+
+算术拓展
+
+* `$[]`：
+
+```
+[zjp@localhost test]$ n=5
+[zjp@localhost test]$ echo $[$n+1]
+6
+[zjp@localhost test]$ echo $[$n+ 1 ]
+6
+```
+
+*注意：中间无所谓空格*
+
+* `$(())`：和上述`$[]`等价
+
+```
+[zjp@localhost test]$ echo $(($n+1))
+6
+[zjp@localhost test]$ echo $((n+=1))
+6
+[zjp@localhost test]$ echo $((n+=1))
+7
+[zjp@localhost test]$ echo $[$n+=1]
+-bash: 7+=1: 尝试给非变量赋值 (错误符号是 "+=1")
+```
+
+*注意：`$[]`内不可以进行+=这样的操作*
+
+* `(())`中间表达式可以改变变量的值
+
+```
+[zjp@localhost test]$ echo $n
+8
+[zjp@localhost test]$ ((n+=1))
+[zjp@localhost test]$ echo $n
+9
+```
+
+* 注意事项：
+
+1. 不可以通过echo输出`(())`中改变变量的内容
+
+2. 不可以通过变量赋值将`(())`的内容进行赋值
+
+3. 可以通过`$[]`将改变的变量赋值给新的变量
+
+```
+[zjp@localhost test]$ echo ((n+=1))
+-bash: 未预期的符号 `(' 附近有语法错误
+[zjp@localhost test]$ r=((n+=1))
+-bash: 未预期的符号 `(' 附近有语法错误
+[zjp@localhost test]$ r=$[$n+1]
+[zjp@localhost test]$ echo $r
+10
+```
+
+* expr
+
+```
+[zjp@localhost test]$ expr 4 + 5
+9
+[zjp@localhost test]$ expr 4 +5
+expr: syntax error: unexpected argument “+5”
+[zjp@localhost test]$ expr 4+5
+4+5
+```
+
+*注意：expr num + num中间的空格不可以省略，否则会发生一些错误；不可以将expr表达式赋值给新的变量；可以使用反引号转义一下赋值给新的变量;*
+
+*特殊的，对于expr num `*` num 需要对`*`进行转义*
+
+```
+[zjp@localhost test]$ r=expr 4 + 5
+bash: 4: 未找到命令...
+[zjp@localhost test]$ r=`expr 4 + 5`
+[zjp@localhost test]$ echo $r
+9
+[zjp@localhost test]$ r=$(expr 4 + 5)
+[zjp@localhost test]$ echo $r
+9
+
+[zjp@localhost test]$ r=`expr 4 * 5`
+expr: syntax error: unexpected argument “array”
+[zjp@localhost test]$ r=`expr 4 \* 5`
+[zjp@localhost test]$ echo $r
+20
+```
