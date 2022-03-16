@@ -76,6 +76,7 @@ nav:
           - one_loop_one_thread.md
           - 有限状态机.md
     - 网络编程:
+      - SIGPIPE.md
       - Reactor模式.md
       - 服务器程序架构(ep).md
       - 解决粘包半包.md
