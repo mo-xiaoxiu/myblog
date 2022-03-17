@@ -82,7 +82,7 @@ nav:
       - 解决粘包半包.md
       - select_poll_epoll.md
       - socket_calculate.md
-      - 网络编程知识点随机.md
+      - 网络编程知识点随记.md
   - 网络:
     - Cookie_Session_Token.md
     - RSA_TLS三次握手.md
