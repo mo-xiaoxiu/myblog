@@ -601,3 +601,46 @@ expr: syntax error: unexpected argument “array”
 [zjp@localhost test]$ echo $r
 20
 ```
+
+
+
+
+
+
+
+# shell示例
+
+```shell
+#!/bin/sh
+
+# 执行指令后，会先显示该指令及所下的参数
+set -x
+
+# 脚本执行的位置是当前目录位置
+SOURCE_DIR=`pwd`
+# 该变量的值意思是：在上一级创建bulid
+BUILD_DIR=${BUILD_DIR:-../build}
+# 该变量的值意思是：当前目录创建debug
+BUILD_TYPE=${BUILD_TYPE:-debug}
+# 该变量的值意思是：上一级目录创建build-install
+INSTALL_DIR=${INSTALL_DIR:-../${BUILD_TYPE}-install}
+# 该变量的值：0
+BUILD_NO_EXAMPLES=${BUILD_NO_EXAMPLES:-0}
+
+# 创建目录 -p是表示确保目录名称存在，不存在就创建一个
+# 创建的目录名为：build/debug
+mkdir -p $BUILD_DIR/$BUILD_TYPE \
+# 并进入到这个目录
+  && cd $BUILD_DIR/$BUILD_TYPE \
+  # 通过CLI生成CMake项目依赖关系图
+  && cmake --graphviz=dep.dot \
+           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+           -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+           -DCMAKE_BUILD_NO_EXAMPLES=$BUILD_NO_EXAMPLES \
+           $SOURCE_DIR \
+  # make当前目录         
+  && make $*
+
+#cd $SOURCE_DIR && doxygen
+```
+
