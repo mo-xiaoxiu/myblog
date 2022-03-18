@@ -605,7 +605,322 @@ expr: syntax error: unexpected argument “array”
 
 
 
+## the third day
 
+### let命令
+
+```
+[zjp@localhost ~]$ n=5
+[zjp@localhost ~]$ let n=n+1
+[zjp@localhost ~]$ echo $n
+6
+[zjp@localhost ~]$ let n= n+1
+-bash: let: n=: 语法错误: 需要操作数 (错误符号是 "=")
+[zjp@localhost ~]$ let "n= n+1"
+[zjp@localhost ~]$ echo $n
+7
+```
+
+* let可以进行运算拓展
+* let后跟的算术运算不可以有空格
+* let可以使用双引号将算术运算括起来
+* let对于未命名的未知变量会默认为0
+
+```
+[zjp@localhost ~]$ echo $n
+7
+[zjp@localhost ~]$ let n=n+abc
+[zjp@localhost ~]$ echo $n
+7
+```
+
+### 条件测试
+
+**命令真为0，假为1**
+
+可以使用退出状态码对指令等进行测试
+
+```
+[zjp@localhost ~]$ grep study /etc/passwd
+[zjp@localhost ~]$ echo $?
+1
+[zjp@localhost ~]$ grep hello /etc/passwd;echo $?
+1
+```
+
+### test
+
+```
+[zjp@localhost ~]$ x=5;y=10
+[zjp@localhost ~]$ test $x -gt $y
+[zjp@localhost ~]$ echo $?
+1
+[zjp@localhost ~]$ test $y -gt $x
+[zjp@localhost ~]$ echo $?
+0
+```
+
+和test等价的是`[]`
+
+```
+[zjp@localhost ~]$ [ $y -gt $x ] 
+[zjp@localhost ~]$ echo $?
+0
+[zjp@localhost ~]$ [$y -gt $x ]
+bash: [10: 未找到命令...
+^C
+```
+
+**注意：[]内的语句距离两边[]一定要有空格**
+
+### 测试表达式的值
+
+**[[]]可以使用通配符进行模式匹配**
+
+```
+[zjp@localhost ~]$ name=Tom
+[zjp@localhost ~]$ [ $name = [Tt]?? ]
+[zjp@localhost ~]$ echo $?
+1
+[zjp@localhost ~]$ [[ $name=[Tt]?? ]]
+[zjp@localhost ~]$ echo $?
+0
+```
+
+### 字符串测试
+
+```
+[zjp@localhost ~]$ str=
+[zjp@localhost ~]$ [ -z $str ]
+[zjp@localhost ~]$ echo $?
+0
+[zjp@localhost ~]$ str=aaa
+[zjp@localhost ~]$ [ -z $str ]
+[zjp@localhost ~]$ echo $?
+1
+```
+
+**-z：zero 是否为空；str= 字符串为空串**
+
+**`[ -n $str ]`：no 如果字符串str长度不为0，则返回真（0）**
+
+**`[ $str1 = $str2 ]`：两个字符串相等**
+
+**`[ $str1 != $str2]`：两字符串不相等**
+
+```
+[zjp@localhost ~]$ str1=aaa
+[zjp@localhost ~]$ str=AAA
+[zjp@localhost ~]$ [ $str = $str1 ]
+[zjp@localhost ~]$ echo $?
+1
+[zjp@localhost ~]$ str=aaa
+[zjp@localhost ~]$ [ $str = $str1 ]
+[zjp@localhost ~]$ echo $?
+0
+```
+
+### 整数测试
+
+**`[ int1 -eq int2 ]`：int1等于int2** equal
+
+**`[ int1 -ne int2 ]`：int1不等于int2** no equal
+
+**`[ int1 -gt int2 ]`：int1大于int2** greater
+
+**`[ int1 -ge int2 ]`：int1大于等于int2** greater equal
+
+**`[ int1 -lt int2]`：int1小于int2** little
+
+**`[ int1 -le int2]`：int1小于等于int2** little equal
+
+```
+[zjp@localhost ~]$ x=1;[ $x -eq 1 ];echo $?
+0
+[zjp@localhost ~]$ x=2;[ $x -eq 1 ];echo $?
+1
+```
+
+下述方式只能用于整数测试：let命令和双圆括号的整数操作
+
+**==、！=、>、<、>=、<=**
+
+```
+[zjp@localhost ~]$ x=1;let "$x == 1";echo $?
+0
+[zjp@localhost ~]$ x=1;(($x+1 >= 2));echo $?
+0
+[zjp@localhost ~]$ 
+```
+
+* let和双圆括号的测试方法的区别：
+
+	* 使用的操作符不同
+	* let 和 双圆括号 可以使用算术表达式，中括号不行
+	* let 和 双圆括号， 操作符两边可以不留空格
+
+### 逻辑测试
+
+**`[ expr1 -a expr2 ]`：与** and
+
+**`[ expr1 -o expr2 ]`：或** or
+
+**`[ !expr ]`：非**
+
+```
+[zjp@localhost ~]$ x=1;name=Tom
+[zjp@localhost ~]$ [ $x -eq 1 -a -n $name ];echo $?
+0
+[zjp@localhost ~]$ [ ($x -eq )1 -a (-n $name) ];echo $?
+-bash: 未预期的符号 `$x' 附近有语法错误
+```
+
+**注意：不能随便添加"()"**
+
+下述是可以使用模式的逻辑测试：
+
+**`[[ pattern1 && pattern2 ]]`** 与
+
+**`[[ pattern1 || pattern2 ]]`** 或
+
+**`[[ !pattern ]]`** 非
+
+```
+[zjp@localhost ~]$ x=1;name=Tom;
+[zjp@localhost ~]$ [[ $x -eq 1 && $name = To? ]];echo $?
+0
+```
+
+**检查空值：**
+
+检查字符串是否为空
+
+**`[ "$name" = "" ]`** 
+
+**`[ !"$name" ]`**
+
+**`[ "x${name}"="x" ]`** 
+
+```
+[zjp@localhost ~]$ name=
+[zjp@localhost ~]$ [ "$name" = "" ]
+[zjp@localhost ~]$ echo $?
+0
+[zjp@localhost ~]$ name=aaa
+[zjp@localhost ~]$ [ "$name" = "" ]
+[zjp@localhost ~]$ echo $?
+1
+[zjp@localhost ~]$ [ ! "$name" ];echo $?
+1
+[zjp@localhost ~]$ name=
+[zjp@localhost ~]$ [ ! "$name" ];echo $?
+0
+[zjp@localhost ~]$ name=
+[zjp@localhost ~]$ [ ! "$name" ];echo $?
+0
+[zjp@localhost ~]$ [ "x${name}" = "x" ]
+[zjp@localhost ~]$ echo $?
+0
+[zjp@localhost ~]$ name=aaa
+[zjp@localhost ~]$ [ "x${name}" = "x" ];echo $?
+1
+```
+
+### 文件测试
+
+文件是否存在，文件属性，访问权限等
+
+常见的文件测试操作符：
+
+![文件测试常见的操作符](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%B8%B8%E8%A7%81%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6.jpg)
+
+### 括号总结
+
+**`${...}`：获取变量值**
+
+**`$(...)`：命令替换**
+
+**`$[...]`：让无类型的变量参与算术运算** `$[$n+1]`
+
+**`$((...))`：同上**
+
+**`((...))`：算术运算**
+
+**`[...]`：条件测试，注意：变量与符号或者选项之间需要有空格**
+
+**`[[...]]`：条件测试，与`[...]`相比之下此支持模式匹配与通配符**
+
+### if条件语句
+
+#### 语法结构
+
+```
+if expr1	# 如果expr1 为真（0）
+then
+	commands1	# 执行语句块 commands1
+elif expr2	# 如果expr1 不为真
+then
+	commands2	# 执行语句块 commands2
+......	# 可以有多个elif语句
+else	# else最多只有一个
+	commands4	# 执行语句块 commands4
+fi
+```
+
+以下是一个简单的ifshell脚本：
+
+```shell title="01easy_for.sh"
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+	echo Usage: $0 username
+	exit 1
+fi
+
+echo $1
+
+```
+
+*编译过程以及输出结果如下：*
+
+```
+[zjp@localhost the_fourth_day]$ sh 01easy_for.sh 
+Usage: 01easy_for.sh username
+[zjp@localhost the_fourth_day]$ sh 01easy_for.sh 1
+1
+[zjp@localhost the_fourth_day]$ sh 01easy_for.sh 2
+2
+```
+
+* expr通常为条件测试表达式；也可以是多个命令，以最后一个命令的退出状态为条件值
+
+* commands为可执行语句块，如果为空，需要使用shell提供的空命令状态":"（冒号）。该命令不做任何事情，只返回一个退出状态0
+
+
+
+
+
+### case选择语句
+
+#### 语法结构
+
+```
+case expr in	# expr为表达式，注意关键词in
+	pattern1)	# 若expr 与 pattern1 匹配，注意括号
+	commands1	# 执行语句块commands1
+	;;		# 跳出 case 结构
+	pattern2)	# 若expr 与 pattern2 匹配
+	commands2	# 执行语句块commands2
+	;;
+	......		# 可以有任意多个模式匹配
+	*)		# 若expr与上面的模式都不匹配
+	commands	# 执行语句块commands
+	;;
+esac			# case语句必须以esac终止
+```
+
+* 所给的匹配模式pattern中可以含有多个通配符和“|”
 
 
 
