@@ -648,7 +648,7 @@ expr: syntax error: unexpected argument “array”
 1
 ```
 
-### test
+#### test
 
 ```
 [zjp@localhost ~]$ x=5;y=10
@@ -673,7 +673,7 @@ bash: [10: 未找到命令...
 
 **注意：[]内的语句距离两边[]一定要有空格**
 
-### 测试表达式的值
+#### 测试表达式的值
 
 **[[]]可以使用通配符进行模式匹配**
 
@@ -687,7 +687,7 @@ bash: [10: 未找到命令...
 0
 ```
 
-### 字符串测试
+#### 字符串测试
 
 ```
 [zjp@localhost ~]$ str=
@@ -720,7 +720,7 @@ bash: [10: 未找到命令...
 0
 ```
 
-### 整数测试
+#### 整数测试
 
 **`[ int1 -eq int2 ]`：int1等于int2** equal
 
@@ -759,7 +759,7 @@ bash: [10: 未找到命令...
 	* let 和 双圆括号 可以使用算术表达式，中括号不行
 	* let 和 双圆括号， 操作符两边可以不留空格
 
-### 逻辑测试
+#### 逻辑测试
 
 **`[ expr1 -a expr2 ]`：与** and
 
@@ -826,7 +826,7 @@ bash: [10: 未找到命令...
 1
 ```
 
-### 文件测试
+#### 文件测试
 
 文件是否存在，文件属性，访问权限等
 
@@ -921,6 +921,247 @@ esac			# case语句必须以esac终止
 ```
 
 * 所给的匹配模式pattern中可以含有多个通配符和“|”
+
+
+
+
+
+
+
+## the fifth day
+
+### for循环语句
+
+#### 语法结构
+
+```shell
+for variable in list	# 每次循环，依次把列表list中的一个值赋给循环变量
+do	# 循环开始的标志
+	commands	# 循环变量每取一次值，循环体就执行一次
+done	# 循环结束的标志
+```
+
+#### 说明
+
+* list可以是命令替换、变量名替换、字符串、文件名列表（包含通配符）
+
+* for循环执行的次数取决于列表list中单词的个数
+
+* for循环中一般要出现循环变量，但也可以不出现
+
+#### 示例
+
+```shell title="01easy_for.sh"
+#!bin/bash
+
+for i in 1 2 3 4
+do
+	echo value of is $i
+done
+
+```
+
+*编译并输出的结果如下：*
+
+```
+value of is 1
+value of is 2
+value of is 3
+value of is 4
+```
+
+for循环的执行过程，是将list中的第一个词赋值给循环变量，并将这个词从list中删除，然后进入循环体，执行do和done之间的命令。下一次进入循环时，将第二个词赋值给循环变量，并将其从list中删除，以此类推
+
+当list中的词全部被移走后，循环结束
+
+#### 位置参量的使用
+
+* `$* "$*"  $@  "$@"`
+
+* 可以省略`in list`，此时使用`"$@"`
+
+```shell title="02Parameter.sh"
+#!bin/bash
+
+for i
+do
+	echo value of is $i
+done
+
+```
+
+*编译及输出结果：*
+
+```
+[zjp@localhost the_fifth_day]$ sh 02Parameter.sh 
+[zjp@localhost the_fifth_day]$ sh 02Parameter.sh 1 2 3 4
+value of is 1
+value of is 2
+value of is 3
+value of is 4
+```
+
+```shell title="03otherParameter.sh"
+#!bin/bash
+
+#for i in $*
+#for i in "$*"
+#for i in $@
+for i in "$@"
+do
+	echo $i
+done
+```
+
+*编译及输出结果为：*
+
+```
+[zjp@localhost the_fifth_day]$ vim 03otherParameter.sh
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh 
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh 1 2 3 4
+1
+2
+3
+4
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh "1 2" 3 4
+1
+2
+3
+4
+[zjp@localhost the_fifth_day]$ vim 03otherParameter.sh 
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh 1 2 3 4
+1 2 3 4
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh "1 2" 3 4
+1 2 3 4
+[zjp@localhost the_fifth_day]$ vim 03otherParameter.sh 
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh 1 2 3 4
+1
+2
+3
+4
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh "1 2" 3 4
+1
+2
+3
+4
+[zjp@localhost the_fifth_day]$ vi 03otherParameter.sh 
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh 1 2 3 4
+1
+2
+3
+4
+[zjp@localhost the_fifth_day]$ sh 03otherParameter.sh "1 2" 3 4
+1 2
+3
+4
+```
+
+从输出结果可以看出，
+
+* `$*`总是单字符串输出，与参数列表加不加`""`没有关系
+
+* `"$*"`总是将参数列表当作一个整体，分别输出参数
+
+* `$@`与没有加双引号的`$*`是一样的
+
+* `"$@"`与`"$*"`区别就是：`"$@"`是单字符串输出参数的
+
+
+再来看一个for循环中有变量递增的：
+
+```shell title="04for.sh"
+#!bin/bash
+
+counter=0
+
+for f in *
+do
+	counter=$[$counter+1]
+done
+
+echo There are $counter in 'pwd'
+
+```
+
+*输出结果如下：*
+
+```
+[zjp@localhost the_fifth_day]$ vi 04for.sh
+[zjp@localhost the_fifth_day]$ sh 04for.sh 
+There are 4 in pwd
+```
+
+#### 类似于C语言的for循环
+
+```shell
+for((expr1;expr2;expr3))
+do
+done
+```
+
+接下来看一个打印星号图的示例：
+
+```shell ttile="05printTw.sh"
+#!bin/bash
+
+if [ $# -ne 1 ]
+then
+	echo 'Usage:$0 <n>'
+	exit 1
+fi
+
+if [ $1 -lt 5 -o $1 -gt 15 ]
+then
+	echo 'Usage:$0 <n>'
+	echo ' where 5<=n<=15'
+	exit 1
+fi
+
+for ((i=0;i<$1;i++))
+do
+	for ((j=0;j<$[$1-$i-1];j++))
+	do
+		echo -n " "
+	done
+
+	for ((j=0;j<$[2*$i+1];j++))
+	do
+		echo -n "*"
+	done
+
+	echo -ne '\n'
+done
+
+```
+
+*输出的结果如下：*
+
+```
+[zjp@localhost the_fifth_day]$ vi 05printTwi.sh
+[zjp@localhost the_fifth_day]$ sh 05printTwi.sh 
+Usage:$0 <n>
+[zjp@localhost the_fifth_day]$ sh 05printTwi.sh 16
+Usage:$0 <n>
+ where 5<=n<=15
+[zjp@localhost the_fifth_day]$ sh 05printTwi.sh 1
+Usage:$0 <n>
+ where 5<=n<=15
+[zjp@localhost the_fifth_day]$ sh 05printTwi.sh 8
+       *
+      ***
+     *****
+    *******
+   *********
+  ***********
+ *************
+***************
+```
+
+
+
+
+
+
 
 
 
