@@ -90,6 +90,7 @@ nav:
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
   - 其他:
+    - Git.md
     - shell教程.md
     - UML类图.md
     - study_makefile.md
