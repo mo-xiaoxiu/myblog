@@ -1,3 +1,9 @@
+
+
+
+
+
+
 # GIt
 
 ## Git相关的配置文件：
@@ -144,4 +150,63 @@ git commit -m "[message]"
 
 
 # Git实践
+
+在桌面新建一个文件，进入这个文件作为仓库存放的地方：
+
+![新建文件夹](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/create_newFile_Desktop.png)
+
+这里我选择我在github的开源仓库克隆下来作为演示。在文件夹中打开`git bash`，输入命令：
+
+```git
+git clone https://github.com/mo-xiaoxiu/imagefrommyblog.git
+```
+
+![git_clone](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/git_clone.png)
+
+之后我们在这个本地仓库进行操作。这里我的操作如下：
+
+* 首先创建一个文件名为git，归类git的图片（在这之前先使用`git pull`更新仓库）：
+
+  ```git
+  git pull
+  
+  # 确保名为git_clone的图片有在当前本地仓库
+  ls -l | grep git_
+  
+  mkdir Git
+  
+  mv git_clone.png create_newFile_Desktop.png Git
+  ```
+
+  ![mkdir_and_move](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/mkdir_Git_and_move.png)
+
+* 然后对其添加到暂存区：
+
+  ```git
+  git add .
+  ```
+
+  ![git_add](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/git_add.png)
+
+  ​	*以上只是我个人的对于文件的一些操作，具体以实际需要作为调整*
+
+* 之后将其提交到本地仓库：
+
+  ```git
+  git commit -m "Picture classification"
+  ```
+
+  ![git_commit](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/git_commit.png)
+
+* 然后将本地仓库推到远端：
+
+  ```git
+  git push
+  ```
+
+* 推到远端成功之后复查远端仓库，看是否一切正常:
+
+  ![复查远端仓库](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E5%A4%8D%E6%9F%A5%E8%BF%9C%E7%AB%AF%E4%BB%93%E5%BA%93.png)
+
+  
 
