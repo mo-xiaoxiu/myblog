@@ -9,7 +9,7 @@
 ## Git相关的配置文件：
 
 1. `Git\etc\config`：安装目录下的`gitconfig --system系统级的`
-2. `C:\Users\Admin\用户\.gitconfig`：只适合于当前登录用户的配置 `--global`
+2. `C:\Users\用户\.gitconfig`：只适合于当前登录用户的配置 `--global`
 
 命令行查看：
 
