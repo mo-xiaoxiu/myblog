@@ -1159,7 +1159,667 @@ Usage:$0 <n>
 
 
 
+## the sixth day
 
+### while循环语句
+
+#### 语法结构
+
+```shell
+while expr	# 执行expr
+do	# 若expr的退出状态为0，进入循环，否则退出
+	commands	# 循环体
+done	# 循环体结束的标志
+```
+
+#### 执行过程
+
+先执行expr，如果退出状态为0，则执行循环体；执行到关键字done后，回到循坏体的顶部，while再次检查expr的退出状态...以此类推，直到expr退出状态为非0为止
+
+下述例子同样时打印星号：
+
+```shell
+#!/bin/bash
+
+if [ $# -ne 1 ];then
+	echo "Usage:$0 <n>"
+	exit 1
+fi
+
+if [ $1 -lt 5 -o $1 -gt 15 ];then
+	echo "Usage:$0 <n>"
+	echo "(where 5<=n<=15)"
+	exit 1
+fi
+
+lines=$1
+curline=0
+
+while [ $curline -lt $lines ]
+do
+	nSpaces=$[$lines-$curline-1]
+	while [ $nSpaces -gt 0 ]
+	do
+		echo -n " "
+		nSpaces=$[$nSpaces-1]
+	done
+	nStars=$[2*$curline+1]
+	while [ $nStars -gt 0 ]
+	do
+		echo -n "*"
+		nStars=$[nStars-1];
+	done
+	echo -ne "\n"
+	curline=$[$curline+1]
+done
+```
+
+*输出结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ vi 01printTw_while.sh 
+[zjp@localhost the_sixth_day]$ sh 01printTw_while.sh 
+Usage:01printTw_while.sh <n>
+[zjp@localhost the_sixth_day]$ sh 01printTw_while.sh 16
+Usage:01printTw_while.sh <n>
+(where 5<=n<=15)
+[zjp@localhost the_sixth_day]$ sh 01printTw_while.sh 8
+       *
+      ***
+     *****
+    *******
+   *********
+  ***********
+ *************
+***************
+```
+
+### until循环语句
+
+#### 语法结构
+
+```shell
+until expr	# 执行expr
+do	# 若expr退出状态为非0，进入循环，否则退出
+	commands	# 循环体
+done	# 循环结束标志
+```
+
+#### 执行过程
+
+与while相似，只是当expr退出状态为**非0**时，执行循环体内容，直到expr为0时退出
+
+下述是一个示例：
+
+```shell
+#!/bin/bash
+
+counter=0
+
+until [ $counter -eq 3 ]
+do
+	echo AAA
+	sleep 1
+	counter=$[$counter+1]
+done
+```
+
+*以上程序是每隔一秒输出三行AAA，编译执行过程如下：*
+
+```
+[zjp@localhost the_sixth_day]$ vi 02until.sh
+[zjp@localhost the_sixth_day]$ sh 02until.sh 
+AAA
+AAA
+AAA
+```
+
+### break 和 continue
+
+* `break [n]`
+
+	* 用于强制退出当前执行状态
+
+	* 如果是嵌套循环，则break后面可以跟着一个数字表示退出第n重循环（最里面为第一层循环）
+
+* `continue [n]`
+
+	* 用于忽略本次循环的剩余部分，回到循环的顶部，继续下一次循环
+
+	* 如果是嵌套循环，continue后面可以跟着一个数字表示回到第n重循环的顶部
+
+### exit 和 sleep
+
+* `exit n`
+
+exit可以用于退出脚本或者退出当前程序。n是一个从**0到255**的整数，0表示退出成功，非0表示遇到某种失败的退出，**该整数被保存在状态变量`$?`中**
+
+* `sleep n`
+
+暂停n秒
+
+### select循环与菜单
+
+#### 语法结构
+
+```shell
+select var in list
+do	# 循环开始
+	commands	# 循环变量每次取一次值，循环体就执行一次
+done
+```
+
+#### 说明
+
+* select循环主要用于创建菜单，按照数字顺序排列的菜单项将显示在**标准错误**上，并**显示PS3提示符，等待用户输入**
+
+* 用户输入菜单列表中的某个数字，执行相应的命令
+
+* 用户输入被保存在内置变量REPLY中
+
+以下是一个select示例：
+
+```shell
+#!/bin/bash
+
+select var in Dogs Cats Mouse
+do
+	case $var in	# select经常会与case搭配使用
+		Dogs)
+			echo "Dogs are my favorite pet"
+			;;
+		Cats)
+			echo "Cats are my favorite pet"
+			;;
+		Mouse)
+			echo "Mouse are my favorite pet"
+			;;
+		*)
+			echo non of my favorite pet
+	esac
+done
+```
+
+*编译执行的结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+#? 1
+Dogs are my favorite pet
+#? 2
+Cats are my favorite pet
+#? 3
+Mouse are my favorite pet
+#? 4
+non of my favorite pet
+#? 
+```
+
+变化1：在选择喜欢其中一种自定义喜欢的动物之后退出程序（其他不是自定义喜欢的将会进入循环）：
+
+*假设这里自定义喜欢的动物是Dogs*:
+
+```shell
+#!/bin/bash
+
+select var in Dogs Cats Mouse
+do
+	case $var in	# select经常会与case搭配使用
+		Dogs)
+			echo "Dogs are my favorite pet";break
+			;;
+		Cats)
+			echo "Cats are my favorite pet"
+			;;
+		Mouse)
+			echo "Mouse are my favorite pet"
+			;;
+		*)
+			echo non of my favorite pet
+	esac
+done
+```
+
+*编译执行过程如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+#? 2
+Cats are my favorite pet
+#? 3
+Mouse are my favorite pet
+#? 4
+non of my favorite pet
+#? 1
+Dogs are my favorite pet
+```
+
+变化2：在选择任意一种动物之后退出：
+
+```shell
+#!/bin/bash
+
+select var in Dogs Cats Mouse
+do
+	case $var in	# select经常会与case搭配使用
+		Dogs)
+			echo "Dogs are my favorite pet";#break
+			;;
+		Cats)
+			echo "Cats are my favorite pet"
+			;;
+		Mouse)
+			echo "Mouse are my favorite pet"
+			;;
+		*)
+			echo non of my favorite pet
+	esac
+	break	# 选择之后直接退出
+done
+```
+
+*编译执行的过程如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+#? 1
+Dogs are my favorite pet
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+#? 2
+Cats are my favorite pet
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+#? 3
+Mouse are my favorite pet
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+#? 4
+non of my favorite pet
+```
+
+变化3：还可以在用户输入前，对用户进行提示（使用PS3变量）：
+
+```shell
+#!/bin/bash
+
+PS3="your favorite pet: "	# 使用PS3变量进行用户输入前的提示
+
+select var in Dogs Cats Mouse
+do
+	case $var in	# select经常会与case搭配使用
+		Dogs)
+			echo "Dogs are my favorite pet";#break
+			;;
+		Cats)
+			echo "Cats are my favorite pet"
+			;;
+		Mouse)
+			echo "Mouse are my favorite pet"
+			;;
+		*)
+			echo non of my favorite pet
+	esac
+	break	# 选择之后直接退出
+done
+```
+
+*执行过程如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 03select.sh 
+1) Dogs
+2) Cats
+3) Mouse
+your favorite pet: 1
+Dogs are my favorite pet
+```
+
+#### select 与 case
+
+* select是个无限循环，因此要记住用break命令退出循环，或用exit进行终止，也可以使用ctrl+c推出循环
+
+* select经常金额case联合使用
+
+* 与for循环相似，可以省略in list，此时可以使用位置参量
+
+### 函数
+
+函数在shell中的一般格式：
+
+```
+function function_name {
+	commands
+}
+```
+
+或者（一般多用下面这种）
+
+```
+function_name() {
+	commands
+}
+```
+
+以下是一个函数的示例：
+
+```shell
+#!/bin/bash
+
+fun(){
+	echo "Entering function."
+	echo "Exiting function."
+}
+
+fun	# 通过函数名直接调用该函数
+
+
+```
+
+*执行过程和结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 04function.sh 
+Entering function.
+Exiting function.
+```
+
+shell的函数也是可以接受参数的，函数的形式与上面所写一致：
+
+```shell
+#!/bin/bash
+
+func() {
+	echo "the parameter's count: $#"
+	echo "the first parameter: $1"
+	echo "the second parameter: $2"
+}
+
+func a b	# 传入两个参数分别是a、b
+```
+
+*执行过程和结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 05function_para.sh 
+the parameter's count: 2
+the first parameter: a
+the second parameter: b
+```
+
+**还可以在另一个程序中通过包含文件的方式（类似于C/C++中的#include的操作），使用该程序的函数**
+
+```shell
+#!/bin/bash
+
+. ./tool		# 表示包含当前目录下的文件
+
+func 		# 调用另一个程序（文件）中的函数
+
+```
+
+在当前目录下的文件tool
+
+```
+func() {
+	echo "this is a tool."
+}
+```
+
+*执行过程与结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ vi 06use_another_func.sh
+[zjp@localhost the_sixth_day]$ sh 06use_another_func.sh 
+this is a tool.
+```
+
+### 字符串操作
+
+![字符串操作](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C.jpg)
+
+以下是一个示例：
+
+*匹配字符串*
+
+```shell
+#!/bin/bash
+
+var="/aa/bb/cc"		# 要进行字符串操作（匹配）的字符出变量
+result1=${var#*/}	# 删除从前往后匹配（一个或者多个）第一个“/”的最少部分
+result2=${var##*/}	# 删除从前往后匹配（一个或者多个）最后一个“/”的最多部分
+result3=${var%/*}	# 删除从后往前匹配（一个或者多个）第一个“/”的最少部分
+result4=${var%%/*}	# 删除从后往前匹配（一个或者多个）最后一个“/”的最多部分
+
+echo $var
+
+echo '${var#*/}'=$result1
+echo '${var##*/}'=$result2
+echo '${var%/*}'=$result3
+echo '${var%%/*}'=$result4
+```
+
+*执行过程和输出结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ vi 07character.sh
+[zjp@localhost the_sixth_day]$ sh 07character.sh 
+/aa/bb/cc
+${var#*/}=aa/bb/cc
+${var##*/}=cc
+${var%/*}=/aa/bb
+${var%%/*}=
+```
+
+### eval命令
+
+`eval arg1 [arg2] ... [argN]`
+
+将所有参数连接成一个表达式，并计算或者执行该表达式，参数中的任何变量都将被展开
+
+```
+[zjp@localhost the_sixth_day]$ listpage="ls -l | more"
+[zjp@localhost the_sixth_day]$ eval $listpage
+总用量 44
+-rw-rw-r--. 1 zjp zjp  456 3月  21 14:38 01printTw_while.sh
+-rw-rw-r--. 1 zjp zjp  101 3月  21 14:43 02until.sh
+-rw-rw-r--. 1 zjp zjp  411 3月  21 15:06 03select.sh
+-rw-rw-r--. 1 zjp zjp  121 3月  21 15:29 04function.sh
+-rw-rw-r--. 1 zjp zjp  168 3月  21 15:33 05function_para.sh
+-rw-rw-r--. 1 zjp zjp  118 3月  21 15:40 06use_another_func.sh
+-rw-rw-r--. 1 zjp zjp  619 3月  21 16:02 07character.sh
+-rw-rw-r--. 1 zjp zjp 8718 3月  21 16:03 README.md
+-rw-rw-r--. 1 zjp zjp   35 3月  21 15:40 tool
+```
+
+### 随机数与expr
+
+* 生成随机数
+
+```
+echo $RANDOM
+```
+
+* expr
+
+```
+expr 5 % 3
+expr 5 \* 3
+```
+
+*注意空格*
+
+### shift
+
+* 一般用于函数或者脚本程序参数处理，特别是参数多于10以上
+
+* 将所有参数变量向下移动一个位置
+
+以下是一个简单得shift示例：
+
+```shell
+#!/bin/bash
+
+while [ "$1" != "" ]
+do
+	echo $1
+	shift
+done
+```
+
+*执行和输出结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 08shift.sh 1 2 3
+1
+2
+3
+```
+
+变化：将程序中的`echo $1`改成`echo $*`：
+
+```shell
+#!/bin/bash
+
+while [ "$1" != "" ]
+do
+	echo $*
+	shift
+done
+
+```
+
+*执行和输出结果如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 08shift.sh 1 2 3
+1 2 3
+2 3
+3
+```
+
+### trap命令
+
+```
+trap command signal
+```
+
+* command
+
+	* 一般情况下是Linux命令
+
+	* ''表示发生陷阱时为空指令，不做任何动作
+
+	* '-'表示发生陷阱时采用缺省的指令
+
+* signal
+
+	* HUP(1)：挂起
+	
+	* INT(2)：中断
+
+	* QUIT(3)：退出‘
+
+	* ABRT(6)：异常终止
+
+	* ALRM(14)：闹钟
+
+	* TREM(15)：中止（关机）
+
+trap的异步处理能力：当程序顺序执行下来的时候，如果发生信号，将转去执行信号所关联的操作；
+
+trap可以对信号的操作进行关联
+
+```shell
+#!/bin/bash
+
+trap "rm -f tmp$$;exit 0" 2 3	# 捕获2、3信号，执行“”中的内容（指令）
+touch tmp$$
+sleep 60
+```
+
+
+*在一个终端执行如下：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 09trap.sh 
+
+```
+
+*在另一个终端查看此时当前目录下有没有创建”tmp+当前进程号“的文件*：
+
+```
+[zjp@localhost the_sixth_day]$ ls
+01printTw_while.sh  03select.sh    05function_para.sh     07character.sh  09trap.sh  tmp32839
+02until.sh          04function.sh  06use_another_func.sh  08shift.sh      README.md  tool
+```
+
+*可以发现创建了`tmp32839`这个文件*
+
+再在执行程序的终端`ctrl+c`对程序进行中断，然后在另一个终端查看此时的文件列表：
+
+```
+[zjp@localhost the_sixth_day]$ ls
+01printTw_while.sh  03select.sh    05function_para.sh     07character.sh  09trap.sh  tool
+02until.sh          04function.sh  06use_another_func.sh  08shift.sh      README.md
+```
+
+*可以发现，此时的`tmp32839`已经被删除了*
+
+
+
+再来看一个trap的示例：
+
+以下程序的功能是对于当前终端进行锁屏，需要输入密码才可以解锁使用：
+
+```shell
+
+```
+
+*在终端执行该脚本，得到：*
+
+```
+[zjp@localhost the_sixth_day]$ sh 10trap_tty.sh 
+Enter your password to lock tty: 
+
+```
+
+*输入密码之后，刷新屏幕，此时输入正确的密码即可解锁：*
+
+```
+Enter your password to unlock tty: 123
+unlocking...
+[zjp@localhost the_sixth_day]$ 
+```
+
+*输入错误的信息试一下：*
+
+
+```
+wrong password and terminal is locker...
+Enter your password to unlock tty: 
+
+```
+
+
+### shell内置命令总结
+
+![shell内置命令](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/shell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.jpg)
 
 
 
