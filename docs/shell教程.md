@@ -1788,6 +1788,34 @@ sleep 60
 以下程序的功能是对于当前终端进行锁屏，需要输入密码才可以解锁使用：
 
 ```shell
+#!/bin/bash
+
+trap "nice_try" 2 3 15	# 捕获2、3和15信号，执行"nice_try"函数
+
+TTY='tty'	# 保存当前终端的变量
+
+nice_try()
+{
+	echo -e "\nnice try,the terminal stays locked."
+}
+
+echo -n "Enter your password to lock $TTY: "
+read PASSWORD
+clear
+
+echo -n "Enter your password to unlock $TTY: "
+while :
+do
+	read RESPONSE
+	if [ "$RESPONSE" = "$PASSWORD" ];then
+		echo "unlocking..."
+		break
+	fi
+	clear
+
+	echo "wrong password and terminal is locker..."
+	echo -n "Enter your password to unlock $TTY: "
+done
 
 ```
 
