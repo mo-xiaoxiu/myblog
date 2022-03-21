@@ -1101,7 +1101,7 @@ done
 
 接下来看一个打印星号图的示例：
 
-```shell ttile="05printTw.sh"
+```shell title="05printTw.sh"
 #!bin/bash
 
 if [ $# -ne 1 ]
