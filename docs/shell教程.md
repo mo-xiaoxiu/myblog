@@ -1853,6 +1853,124 @@ Enter your password to unlock tty:
 
 
 
+
+
+## the seventh day
+
+### 流编辑器sed
+
+sed介绍
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_%E6%B5%81%E7%BC%96%E8%BE%91%E5%99%A8sed.jpg)
+
+sed简单用法
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%AE%80%E5%8D%95%E7%94%A8%E6%B3%95.jpg)
+
+sed指定多个命令的三种方式
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_%E6%8C%87%E5%AE%9A%E5%A4%9A%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E6%96%B9%E5%BC%8F.jpg)
+
+sed -f
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed-f.jpg)
+
+sed命令语法
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E5%91%BD%E4%BB%A4%E8%AF%AD%E6%B3%95.jpg)
+
+sed定位方式
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E5%AE%9A%E4%BD%8D%E6%96%B9%E5%BC%8F.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_m,n!%20%E5%8F%96%E5%8F%8D_%E6%89%93%E5%8D%B0.jpg)
+
+sed编辑命令
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A42.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4_6.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed$r.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4_7.jpg)
+
+**sed示例**：以下两个命令的区别
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_%E4%B8%A4%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB.jpg)
+
+**sed编辑命令总结**
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/shell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.jpg)
+
+#### sed命令示例
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/sed%E5%91%BD%E4%BB%A4%E7%A4%BA%E4%BE%8B.jpg)
+
+
+
+
+
+### awk
+
+awk介绍
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E4%BB%8B%E7%BB%8D.jpg)
+
+awk简单用法
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E7%AE%80%E5%8D%95%E7%94%A8%E6%B3%95.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_root%E9%A6%96%E8%A1%8C%E5%8C%B9%E9%85%8D.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk-f.jpg)
+
+awk_script语法
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_script%E8%AF%AD%E6%B3%95.jpg)
+
+上述执行过程：
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.jpg)
+
+**awk示例：筛选ip地址**：
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E7%AD%9B%E9%80%89%E4%BF%A1%E6%81%AF.jpg)
+
+BEGIN 和 END
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_BEGIN_END.jpg)
+
+awk模式匹配：
+
+*使用正则表达式：*
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D.jpg)
+
+*使用布尔表达式：*
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D2.jpg)
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D3.jpg)
+
+**字段分隔符、重定向和管道**
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E5%AD%97%E6%AE%B5%E5%88%86%E9%9A%94%E7%AC%A6%E3%80%81%E9%87%8D%E5%AE%9A%E5%90%91%E5%92%8C%E7%AE%A1%E9%81%93.jpg)
+
+*更多awk的操作：*
+
+![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%9B%B4%E5%A4%9Aawk.jpg)
+
+
+
+
+
+
+
+
+
 # shell示例
 
 ```shell
