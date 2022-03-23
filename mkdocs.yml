@@ -89,17 +89,16 @@ nav:
     - RSA_ECDHE密码套件.md
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
+  - 多线程编程:
+    - thread.md
+  - 数据库:
+    - 数据库笔记.md
   - 其他:
     - GIt.md
     - shell教程.md
     - UML类图.md
     - study_makefile.md
     - MYSQL_C_API.md
-  - 多线程编程:
-    - thread.md
-  - 数据库:
-    - 数据库笔记.md
-
   # 测试模块
   # - TEST:
     # - testAddArticle.md
