@@ -50,6 +50,7 @@ nav:
       - 队列:
         - queue.md   
   - C++:
+    - C实现C++虚函数.md
     - C++返回对象.md
     - const重载.md
     - C项目的构建.md
