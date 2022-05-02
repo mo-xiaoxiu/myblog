@@ -313,7 +313,7 @@ shared_ptr<Stock> StockFactory::get(const string& key) {
         pStock.reset(new Stock(key),
                     boost::bind(&StockFactory::weakDeleteCallBack,
                                boost::weak_ptr<StockFactory>(shared_from_this()), _1));
-        //上述把shared_from_this强制转换为weak_ptr，才会延长生命周期：
+        //上述把shared_from_this强制转换为weak_ptr，才不会延长生命周期：
         //boost::bind 拷贝的是实参类型，而不是形参类型
         wkStock = pStock; //更新stocks_[key]
     }
