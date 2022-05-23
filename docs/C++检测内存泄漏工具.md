@@ -162,7 +162,7 @@ void free_pointer(void* usr_ptr, void* addr, bool is_array) {
 		printf("%s: pointer %p (size %u)\n\tat ", msg, (char*)ptr + ALIGNED_LIST_ITEM_SIZE, (unsigned long)ptr->size);
 		print_position(addr, 0);
 		printf("\n\torignally allocated at ");
-		if (!ptr->line) {
+		if (ptr->line) {
 			print_position(ptr->filename, ptr->line);
 		}
 		else {
@@ -211,7 +211,7 @@ int checkMemoryLeaks() {
 
 		printf("Leaked object at %p (size %lu, ", usr_ptr, (unsigned long)ptr->size);
 
-		if (!ptr->line) {
+		if (ptr->line) {
 			print_position(ptr->filename, ptr->line);
 		}
 		else {
@@ -238,7 +238,7 @@ int checkMemoryCorruption() {
 			continue;
 		printf("Heap data corrupt near %p (size %lu, ", usr_ptr, (unsigned long)ptr->size); //ptr->magic != __DEBUG_NEW_MAGIC
 
-		if (!ptr->line) {
+		if (ptr->line) {
 			print_position(ptr->filename, ptr->line);
 		}
 		else
@@ -433,7 +433,7 @@ static void	free_pointer(void* usr_ptr, void* addr, bool is_array) {
 		printf("%s: pointer %p (size %u)\n\tat ", msg, (char*)ptr + ALIGNED_LIST_ITEM_SIZE, (unsigned long)ptr->size);
 		print_position(addr, 0);
 		printf("\n\torignally allocated at ");
-		if (!ptr->line) {
+		if (ptr->line) {
 			print_position(ptr->filename, ptr->line);
 		}
 		else {
@@ -473,13 +473,14 @@ int checkMemoryLeaks() {
 
 		printf("Leaked object at %p (size %lu, ", usr_ptr, (unsigned long)ptr->size);
 
-		if (!ptr->line) {
+		if (ptr->line) {
 			print_position(ptr->filename, ptr->line);
 		}
 		else {
 			print_position(ptr->addr, ptr->line);
 		}
-
+        
+		ptr = ptr->next;
 		printf(")\n");
 		++leak_cnt;
 	}
@@ -500,7 +501,7 @@ int checkMemoryCorruption() {
 			continue;
 		printf("Heap data corrupt near %p (size %lu, ", usr_ptr, (unsigned long)ptr->size); //ptr->magic != __DEBUG_NEW_MAGIC
 
-		if (!ptr->line) {
+		if (ptr->line) {
 			print_position(ptr->filename, ptr->line);
 		}
 		else
