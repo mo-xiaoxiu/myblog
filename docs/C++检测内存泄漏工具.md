@@ -550,3 +550,49 @@ void operator delete[](void* ptr) {
 >
 > 文章代码参考[](https://github.com/chengxumiaodaren/wzq_utils/tree/master/memory)
 
+
+
+
+
+## 测试代码
+
+```cpp title="test.cpp"
+#include "memoryDelect.h"
+
+#include <iostream>
+#include <memory>
+#include <mutex>
+
+
+class A
+{
+public:
+	int a;
+};
+
+int main() {
+	printf("Memory delect \n");
+	int* p1 = new int;
+	delete p1;
+
+	int* p2 = new int[4];
+	//delete[] p2;
+
+	A* p3 = new A;
+	delete p3;
+
+	checkMemoryLeaks();
+	return 0;
+}
+```
+
+*在`VisualStudio2019`上运行的结果为：*
+
+```
+Memory delect
+Leaked object at 01611DB8 (size 16, <Unknown>)
+*** 1 leaks found
+```
+
+---
+
