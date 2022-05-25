@@ -1,31 +1,31 @@
 # epoll的实现机制
 ## 总图
-![epoll](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll.drawio.png)
+![epoll](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll.drawio.png)
 <br>
 
 ## accept创建新的socket
-![process](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_accept.drawio.png)
+![process](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_accept.drawio.png)
 <br>
 
 ### 初始化socket对象
-![accept_init_socket](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_accep_1.drawio.png)
+![accept_init_socket](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_accep_1.drawio.png)
 <br>
 
 ### 为新的socket申请file
-![accept_init_file](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_aceept_2.drawio.png)
+![accept_init_file](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_aceept_2.drawio.png)
 <br>
 
 ### 接收连接，添加新文件到当前打开文件列表中
-![epoll_accpet](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_accept_3.drawio.png)
+![epoll_accpet](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_accept_3.drawio.png)
 <br>
 
 ## epoll_create的实现
 ### 创建eventpoll
-![create_eventpoll](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_ceventpoll.drawio.png)
+![create_eventpoll](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_ceventpoll.drawio.png)
 <br>
 
 ### 关联到当前进程的打开文件列表中
-![eventpoll_process](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_eventpoll_process.drawio.png)
+![eventpoll_process](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_eventpoll_process.drawio.png)
 <br>
 
 ## epoll_ctl
@@ -38,15 +38,15 @@
 
 ### 初始化epitem
 对于每一个 socket，调用 epoll_ctl 的时候，都会为之分配一个 epitem<br>
-![init_epitem](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_initepitem_modifiy_1.drawio.png)
+![init_epitem](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_initepitem_modifiy_1.drawio.png)
 <br>
 
 ### 设置socket等待队列
-![init_epollwaitqueue](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_socket_waitqueue.drawio.png)
+![init_epollwaitqueue](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_socket_waitqueue.drawio.png)
 <br>
 
 ### 将epitem插入到红黑树中
-![epitem_insert_in_rbt](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_insert_rbt.drawio.png)
+![epitem_insert_in_rbt](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_insert_rbt.drawio.png)
 <br>
 
 ## epoll_wait
@@ -56,27 +56,27 @@
 * 当前线程主动让出CPU进入睡眠状态，选择下一个进程调度
 <br>
 
-![epoll_wait](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_wait.drawio.png)
+![epoll_wait](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_wait.drawio.png)
 <br>
 
 ## data come
-![data_come](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_dataCome.drawio.png)
+![data_come](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_dataCome.drawio.png)
 <br>
 
 ### 接收数据到等待队列
-![accept_data_in_acceptQueue](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_accept_data_in_acceptQueue.drawio.png)
+![accept_data_in_acceptQueue](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_accept_data_in_acceptQueue.drawio.png)
 <br>
 
 ### 查找就绪队列中的回调函数
-![check_readyQueue_callback](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_check_readyCallBackFunc.drawio.png)
+![check_readyQueue_callback](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_check_readyCallBackFunc.drawio.png)
 <br>
 
 ### 执行回调函数
-![run_callback](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_run_callbackFunc.drawio.png)
+![run_callback](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_run_callbackFunc.drawio.png)
 <br>
 
 ### 执行socket就绪通知
-![run_ready_notice](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/epoll_run_readyNotice.drawio.png)
+![run_ready_notice](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/epoll_run_readyNotice.drawio.png)
 <br>
 <br>
 <br>

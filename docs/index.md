@@ -22,7 +22,7 @@ draft: true
 
 *微信公众号：墨小秀*
 
-![weixin](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/墨小秀公众号二维码.jpg)
+![weixin](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/墨小秀公众号二维码.jpg)
 
 <!-- ## 介绍
 

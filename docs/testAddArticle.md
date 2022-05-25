@@ -14,4 +14,4 @@ int main(int argc, char* argv[]) {
 ## 测试插入图片
 this is a pic.
 
-![test](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/logo.png)
+![test](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/logo.png)

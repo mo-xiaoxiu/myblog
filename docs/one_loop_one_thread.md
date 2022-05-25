@@ -2,7 +2,7 @@
 
 基于`Reactor`
 
-![Reactor模式](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/Reactor_modifiy.drawio.png)
+![Reactor模式](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/Reactor_modifiy.drawio.png)
 
 一个线程对应一个循环，即每个线程函数里有一个循环处理
 

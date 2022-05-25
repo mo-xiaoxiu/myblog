@@ -1,7 +1,7 @@
 # TIME_WAIT问题汇总
 
 ## TIME_WAIT
-![TIME_WAIT](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/TIME_WAIT.drawio.png)
+![TIME_WAIT](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/TIME_WAIT.drawio.png)
 
 * 主动关闭方才有TIME_WAIT状态
 * MSL 指的是 TCP 协议中任何报文在网络上最大的生存时间，任何超过这个时间的数据都将被丢弃
@@ -13,11 +13,11 @@
 ## TIME_WAIT时间过短或者没有
 * 防止历史连接的数据被相同四元组连接错误接收
 
-![TIME_WAIT_toShort_1](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/TIME_WAIT_ToShort.drawio.png)
+![TIME_WAIT_toShort_1](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/TIME_WAIT_ToShort.drawio.png)
 
 * 保证被动关闭一方能被正常关闭
 
-![TIME_WAIT_toShort_2](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/TIME_WAIT_ToShort_2.drawio.png)
+![TIME_WAIT_toShort_2](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/TIME_WAIT_ToShort_2.drawio.png)
 
 ## TIME_WAIT时间过长
 * 内存资源有限，占用内存资源

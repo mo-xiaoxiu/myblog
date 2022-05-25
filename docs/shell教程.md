@@ -512,7 +512,7 @@ test
 
 算术运算符
 
-![算术运算符](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6.jpg)
+![算术运算符](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6.jpg)
 
 算术拓展
 
@@ -832,7 +832,7 @@ bash: [10: 未找到命令...
 
 常见的文件测试操作符：
 
-![文件测试常见的操作符](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%B8%B8%E8%A7%81%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6.jpg)
+![文件测试常见的操作符](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%B8%B8%E8%A7%81%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6.jpg)
 
 ### 括号总结
 
@@ -1591,7 +1591,7 @@ this is a tool.
 
 ### 字符串操作
 
-![字符串操作](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C.jpg)
+![字符串操作](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C.jpg)
 
 以下是一个示例：
 
@@ -1847,7 +1847,7 @@ Enter your password to unlock tty:
 
 ### shell内置命令总结
 
-![shell内置命令](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/shell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.jpg)
+![shell内置命令](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/shell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.jpg)
 
 
 
@@ -1861,45 +1861,45 @@ Enter your password to unlock tty:
 
 sed介绍
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_%E6%B5%81%E7%BC%96%E8%BE%91%E5%99%A8sed.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed_%E6%B5%81%E7%BC%96%E8%BE%91%E5%99%A8sed.jpg)
 
 sed简单用法
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%AE%80%E5%8D%95%E7%94%A8%E6%B3%95.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E7%AE%80%E5%8D%95%E7%94%A8%E6%B3%95.jpg)
 
 sed指定多个命令的三种方式
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_%E6%8C%87%E5%AE%9A%E5%A4%9A%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E6%96%B9%E5%BC%8F.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed_%E6%8C%87%E5%AE%9A%E5%A4%9A%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E6%96%B9%E5%BC%8F.jpg)
 
 sed -f
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed-f.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed-f.jpg)
 
 sed命令语法
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E5%91%BD%E4%BB%A4%E8%AF%AD%E6%B3%95.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E5%91%BD%E4%BB%A4%E8%AF%AD%E6%B3%95.jpg)
 
 sed定位方式
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E5%AE%9A%E4%BD%8D%E6%96%B9%E5%BC%8F.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E5%AE%9A%E4%BD%8D%E6%96%B9%E5%BC%8F.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_m,n!%20%E5%8F%96%E5%8F%8D_%E6%89%93%E5%8D%B0.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed_m,n!%20%E5%8F%96%E5%8F%8D_%E6%89%93%E5%8D%B0.jpg)
 
 sed编辑命令
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A42.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A42.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4_6.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4_6.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed$r.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed$r.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4_7.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4_7.jpg)
 
 **sed示例**：以下两个命令的区别
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/sed_%E4%B8%A4%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed_%E4%B8%A4%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB.jpg)
 
 **sed编辑命令总结**
 

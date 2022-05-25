@@ -2,7 +2,7 @@
 
 ## C程序编译链接过程
 以下为C程序hello.c为例：<br>
-![hello.c](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/C_progranming.drawio.png)
+![hello.c](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/C_progranming.drawio.png)
 <br>
 
 ## gcc

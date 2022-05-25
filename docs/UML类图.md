@@ -2,13 +2,13 @@
 
 ## 基础
 
-![UML](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/UML.drawio.png)
+![UML](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/UML.drawio.png)
 
 ## example
 
 这里以设计模式中的**生成器模式**为例：
 
-![UML_ep](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/UML_ep.drawio.png)
+![UML_ep](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/UML_ep.drawio.png)
 
 [图片来源](https://refactoringguru.cn/design-patterns/builder)
 

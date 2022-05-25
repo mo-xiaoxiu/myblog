@@ -37,7 +37,7 @@ int main() {
 
 首先使用VScode连接到远端服务器，创建一个cpp文件，并执行；
 
-![const_override](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/const_override.png)
+![const_override](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/const_override.png)
 
 
 输出为：
@@ -94,7 +94,7 @@ int main() {
 }
 ```
 
-![real_constOverride_ep](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/const_override_ep.png)
+![real_constOverride_ep](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/const_override_ep.png)
 
 
 输出如下：
@@ -135,7 +135,7 @@ int main() {
 }
 ```
 
-![non_ref_pointer](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/non_ref_or_pointer.png)
+![non_ref_pointer](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/non_ref_or_pointer.png)
 
 编译错误
 

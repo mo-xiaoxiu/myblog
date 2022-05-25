@@ -13,7 +13,7 @@
 
 每个数据库工作线程同时存在两个任务队列
 
-![webServer_DBthread](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/webServer_DBthread.drawio.png)
+![webServer_DBthread](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/webServer_DBthread.drawio.png)
 
 * 队列 1：存放需要执行数据库增删改查操作的任务sqlTask
 * 队列 2：存放sqlTask执行完成之后的结果（结果队列）
@@ -44,7 +44,7 @@ void db_thread_func()  {
 
 服务器编程几个概念：
 
-![webServer_worker_main_Thread](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/data/webServer_worker_main_Thread.drawio.png)
+![webServer_worker_main_Thread](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/webServer_worker_main_Thread.drawio.png)
 
 * `TcpServer`：`Tcp`服务，绑定`ip`地址和端口号，在此端口号上监听连接，用一个成员变量`TcpListener`监听细节；用来接收新的连接
 * `TcpConnection`：管理连接信息；连接状态、本端和对端的`ip`地址和端口号
