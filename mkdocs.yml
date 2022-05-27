@@ -4,51 +4,51 @@ edit_uri: "" #edit/main/docs/
 
 # 导航栏
 nav:
-  - Home: index.md
-  - 数据结构与算法:
-    - leetcode:
-      - 二叉树:
-        - 二叉树的先序、中序和后序遍历.md
-        - 重建二叉树.md
-        - binaryTree_2.md
-      - 字符串:
-        - 反转字符串.md
-        - KMP.md
-      - 数组和哈希:
-        - 数组知识点一之二分查找.md
-        - 数组知识点之滑动窗口.md
-        - 数组知识点之数组元素归位.md
-        - 数组知识点之双指针法.md
-        - 二维数组查找.md
-        - array_and_hashMap.md
-      - 回溯、递归和深度优先遍历:
-        - DFS.md
-        - backTracking.md
-        - recursion_and_iteration.md
-      - 栈和队列:
-        - STACK_QUEUE.md
-      - 动态规划:
-        - bag.md 
-      - 其他:
-        - disjoint_set.md
-        - moore_vote.md
-        - math.md
-        - TrieTree.md     
-        - 螺旋矩阵.md
-    - 数据结构与算法实现:
-      - 链表操作:
-        - implementation.md
-        - List2.md
-        - addNode_in_list_by_diff.md
-        - list_deleteNode_by_diff.md
-        - list_Merge_k_list.md
-        - list_other_op.md
-      - 排序:
-        - radix_sort.md
-        - bucket_sort.md 
-        - counting_sort.md
-      - 队列:
-        - queue.md   
+  - 主页: index.md
+    #- 数据结构与算法:
+    #- leetcode:
+    #  - 二叉树:
+    #    - 二叉树的先序、中序和后序遍历.md
+    #    - 重建二叉树.md
+    #    - binaryTree_2.md
+    #  - 字符串:
+    #    - 反转字符串.md
+    #    - KMP.md
+    #  - 数组和哈希:
+    #    - 数组知识点一之二分查找.md
+    #    - 数组知识点之滑动窗口.md
+    #    - 数组知识点之数组元素归位.md
+    #    - 数组知识点之双指针法.md
+    #    - 二维数组查找.md
+    #    - array_and_hashMap.md
+    #  - 回溯、递归和深度优先遍历:
+    #    - DFS.md
+    #    - backTracking.md
+    #    - recursion_and_iteration.md
+    #  - 栈和队列:
+    #    - STACK_QUEUE.md
+    #  - 动态规划:
+    #    - bag.md 
+    #  - 其他:
+    #    - disjoint_set.md
+    #    - moore_vote.md
+    #    - math.md
+    #    - TrieTree.md     
+    #    - 螺旋矩阵.md
+    #- 数据结构与算法实现:
+    #  - 链表操作:
+    #    - implementation.md
+    #    - List2.md
+    #    - addNode_in_list_by_diff.md
+    #    - list_deleteNode_by_diff.md
+    #    - list_Merge_k_list.md
+    #    - list_other_op.md
+    #  - 排序:
+    #    - radix_sort.md
+    #    - bucket_sort.md 
+    #    - counting_sort.md
+    #  - 队列:
+    #    - queue.md   
   - C++:
     - C语言实现私有成员.md
     - C++检测内存泄漏工具.md
