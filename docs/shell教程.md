@@ -1917,15 +1917,15 @@ sed编辑命令
 
 awk介绍
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E4%BB%8B%E7%BB%8D.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk介绍.jpg)
 
 awk简单用法
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E7%AE%80%E5%8D%95%E7%94%A8%E6%B3%95.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk简单用法.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_root%E9%A6%96%E8%A1%8C%E5%8C%B9%E9%85%8D.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_root首行匹配.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk-f.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk-f.jpg)
 
 awk_script语法
 
@@ -1933,15 +1933,15 @@ awk_script语法
 
 上述执行过程：
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_script语法.jpg)
 
 **awk示例：筛选ip地址**：
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk%E7%AD%9B%E9%80%89%E4%BF%A1%E6%81%AF.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk筛选信息.jpg)
 
 BEGIN 和 END
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_BEGIN_END.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_BEGIN_END.jpg)
 
 awk模式匹配：
 
@@ -1949,19 +1949,21 @@ awk模式匹配：
 
 ![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D.jpg)
 
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_模式匹配.jpg)
+
 *使用布尔表达式：*
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D2.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_模式匹配2.jpg)
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D3.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_模式匹配3.jpg)
 
 **字段分隔符、重定向和管道**
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E5%AD%97%E6%AE%B5%E5%88%86%E9%9A%94%E7%AC%A6%E3%80%81%E9%87%8D%E5%AE%9A%E5%90%91%E5%92%8C%E7%AE%A1%E9%81%93.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_字段分隔符、重定向和管道.jpg)
 
 *更多awk的操作：*
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/awk_%E6%9B%B4%E5%A4%9Aawk.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/awk_更多awk.jpg)
 
 
 
