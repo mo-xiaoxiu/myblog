@@ -61,3 +61,125 @@ int main(){
 
 **当转换类型时损失精度时，需要使用`duration_cast()`进行类型转换**
 
+
+
+## 使用RAII封装一个时间类
+
+* 实验环境：Centos Linux 8
+* RAII
+
+1. 创建一个文件目录：
+
+   ```
+   mkdir runtime_RAII
+   cd runtime_RAII
+   ```
+
+2. 写一个timer命名空间
+
+   ```cpp title="timer.h"
+   #pragma once
+   #include <fstream>
+   #include <iostream>
+   #include <sys/time.h>
+   #include <ctime>
+   #include <string>
+   #include <chrono>
+   
+   using llong = long long;
+   using namespace std::chrono;
+   using std::cout;
+   using std::endl;
+   
+   namespace timer{
+   class TimerLog{
+   	public:
+   		TimerLog(const std::string tag) { //构造函数记录开始时间：构造对象就开始计时
+   			m_tag = tag;
+   			m_begin = high_resolution_clock::now();
+   		}
+   
+   		void reset(){ //重新计算时间
+   			m_begin = high_resolution_clock::now();
+   		}
+   
+   		llong elapsed(){ //计算差值
+   			return static_cast<llong>(duration_cast<std::chrono::milliseconds>(high_resolution_clock::now() - m_begin).count());
+   		}
+   
+   		~TimerLog(){ //析构函数打印对象生命周期
+   			auto time = duration_cast<std::chrono::milliseconds>(high_resolution_clock::now() - m_begin).count(); //转换不失精度
+   			std::cout<<"time {"<<m_tag<<"} "<<static_cast<double>(time)<<" ms"<<std::endl;
+   		}
+   	private:
+   		std::string m_tag;
+   		std::chrono::time_point<std::chrono::high_resolution_clock> m_begin;
+   };
+   } //namespace timer
+   ```
+
+3. 写一个测试程序：
+
+   ```cpp title="test.cpp"
+   #include "timer.h"
+   #include <iostream>
+   #include <thread> //std::this_thread::sleep_for()
+   
+   void test() {
+   	auto func = [](){ //Lambda函数循环打印间隔时间
+   		for(int i = 0; i < 5; i++) {
+   			std::cout<<"i = "<<i<<std::endl;
+   			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+   		}
+   	};
+   	{
+   		timer::TimerLog t("func");
+   		func();
+   	}
+   }
+   
+   int main () {
+   	test();
+   	return 0;
+   }
+   
+   ```
+
+4. 写一个cmake文件方便编译（也可以使用直接编译，这里为了熟练书写cmake）：
+
+   ```cmake
+   cmake_minimum_required(VERSION 3.10)
+   project(test)
+   
+   set(CMAKE_VERBOSE_MAKEFILE ON)
+   set(CMAKE_CXX_FLAGS "-std=c++11")
+   
+   set(SRC_FILES test.cpp)
+   set(PROJECT_SOURCES ${SRC_FILES})
+   
+   add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+   ```
+
+5. 创建一个build目录用于构建项目，并执行：
+
+   ```
+   mkdir build
+   cd build
+   cmake ../
+   make
+   ./test
+   ```
+
+6. 程序输出如下所示：
+
+   ```
+   i = 0
+   i = 1
+   i = 2
+   i = 3
+   i = 4
+   time {func} 12 ms
+   ```
+
+---
+
