@@ -1903,11 +1903,11 @@ sed编辑命令
 
 **sed编辑命令总结**
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/shell%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed编辑命令总结.jpg)
 
 #### sed命令示例
 
-![](https://cdn.jsdelivr.net/gh/mo-xiaoxiu/imagefrommyblog@main/img/shell/sed%E5%91%BD%E4%BB%A4%E7%A4%BA%E4%BE%8B.jpg)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/sed命令示例.jpg)
 
 
 
