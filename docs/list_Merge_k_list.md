@@ -115,40 +115,34 @@ public:
 只需要调用上面两个方法，综合运用一下：
 
 ```C++
-class Solution{
+class Solution {
 public:
-    ListNode* mergeTwoList(ListNode* l1,ListNode* l2){
-        if(!(l1) || !(l2)) return l1?l1:l2;
-        
-        ListNode head,*t1=l1,*t2=l2;
-        ListNOde* tmp=&head;
-        
-        while(t1 && t2){
-            if(t1->val<=t2->val){
-                tmp->next=t1;
-                t1=t1->next;
-            }else{
-                tmp->next=t2;
-                t2=t2->next;
+    ListNode* mergeTwoLists(ListNode *a, ListNode *b) {
+        if ((!a) || (!b)) return a ? a : b;
+        ListNode head, *tail = &head, *aPtr = a, *bPtr = b;
+        while (aPtr && bPtr) {
+            if (aPtr->val < bPtr->val) {
+                tail->next = aPtr; aPtr = aPtr->next;
+            } else {
+                tail->next = bPtr; bPtr = bPtr->next;
             }
-            tmp=tmp->next;
+            tail = tail->next;
         }
-        
-        tmp->next=t1?t1:t2;
+        tail->next = (aPtr ? aPtr : bPtr);
         return head.next;
     }
-    
-    ListNode* merge(vector<ListNode*>& lists,int left,int right){
-        if(left==right) return lists[1];
-        if(left>right) return nullptr;
-        
-        int mid=(left+right)>>1;
-        return mergeTwoList(merge(lists,left,mid),merge(lists,mid+1,right));
+
+    ListNode* merge(vector <ListNode*> &lists, int l, int r) {
+        if (l == r) return lists[l];
+        if (l > r) return nullptr;
+        int mid = (l + r) >> 1;
+        return mergeTwoLists(merge(lists, l, mid), merge(lists, mid + 1, r));
     }
-    
-    ListNode* mergeKList(vector<ListNode*>& lists){
-        return merge(lists,0,lists.size()-1);
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        return merge(lists, 0, lists.size() - 1);
     }
 };
+
 ```
 
