@@ -93,8 +93,9 @@ nav:
     - RSA_ECDHE密码套件.md
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
-    - Linux内核:
-      - 理解了实现再谈网络性能笔记.md
+  - Linux:
+    - Linux运行的硬件基础.md
+    - 理解了实现再谈网络性能笔记.md
   - 多线程编程:
     - thread.md
     - Linux多线程服务器编程笔记.md  
