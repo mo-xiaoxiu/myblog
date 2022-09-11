@@ -148,8 +148,8 @@ theme:
     - navigation.expand # 侧边栏目录文件夹可折叠
 
     # github图标
-    icon:
-      repo: fontawesome/brands/git-square
+    # icon:
+      # repo: fontawesome/brands/git-square
 
 
 # Extensions
