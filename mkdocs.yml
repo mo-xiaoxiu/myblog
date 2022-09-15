@@ -94,6 +94,7 @@ nav:
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
   - Linux以及基础:
+    - CAN.md
     - 函数调用.md
     - Linux运行的硬件基础.md
     - 理解了实现再谈网络性能笔记.md
