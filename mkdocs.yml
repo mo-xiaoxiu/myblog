@@ -49,7 +49,8 @@ nav:
     #    - counting_sort.md
     #  - 队列:
     #    - queue.md   
-  - C++:
+  - C/C++:
+    - 跳转表.md
     - C++前置声明.md
     - C语言实现私有成员.md
     - C++检测内存泄漏工具.md
