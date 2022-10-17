@@ -4,7 +4,7 @@ edit_uri: "" #edit/main/docs/
 
 # 导航栏
 nav:
-  - 主页: index.md
+  - Life: 抓住它.md
     #- 数据结构与算法:
     #- leetcode:
     #  - 二叉树:
