@@ -95,6 +95,7 @@ nav:
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
   - Linux以及基础:
+    - 二进制分析实战笔记.md
     - 进程相关.md
     - splice().md
     - CAN.md
