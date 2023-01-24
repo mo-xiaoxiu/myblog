@@ -50,6 +50,7 @@ nav:
     #  - 队列:
     #    - queue.md   
   - C/C++:
+    - C++基于UDP发送数据封装的类.md
     - C语言的一种RAII.md
     - C++Singleton对象模型探索.md
     - 有关于C++字符串的问题.md
