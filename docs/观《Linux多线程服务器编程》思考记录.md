@@ -276,7 +276,7 @@ int main()
 
 
 
-## notify和notufyAll
+## notify和notifyAll
 
 enqueue使用notify，而countDown使用的时notifyAll，两者互换可能会产生的问题：enqueue如果使用的是notifyAll，会唤醒多个线程，如果其中一个线程先执行dequeue，接下来另一个也被唤醒排队调度到的线程马上执行，在while中，由于已经判断为空，所以wait，之后调度可能很长一段时间都处于wait之中，导致有些线程长期不能从queue中获取元素；而countDown使用notify，则可能无法达到多个子线程同时起跑的设计目的
 
