@@ -388,6 +388,92 @@ A(): true
 B(): true
 B(A): true
 ```
+## 使用pthread保证的单例
+
+来自muduo库的单例模式：
+
+```cpp
+#include "muduo/base/noncopyable.h"
+
+#include <assert.h>
+#include <pthread.h>
+#include <stdlib.h> // atexit
+
+namespace muduo
+{
+
+namespace detail
+{
+// This doesn't detect inherited member functions!
+// http://stackoverflow.com/questions/1966362/sfinae-to-check-for-inherited-member-functions
+template<typename T>
+struct has_no_destroy //检查该类是否具有这个函数
+{
+  template <typename C> static char test(decltype(&C::no_destroy)); //传入参数为C类的no_destroy函数地址
+  template <typename C> static int32_t test(...);
+  const static bool value = sizeof(test<T>(0)) == 1; //true or false 判断这个该类的test函数是否存在
+};
+}  // namespace detail
+
+template<typename T>
+class Singleton : noncopyable //noncopyable：不可复制
+{
+ public:
+  Singleton() = delete; //构造函数删除
+  ~Singleton() = delete;
+
+  static T& instance() //提供单例的静态成员函数
+  {
+    pthread_once(&ponce_, &Singleton::init); //使用pthread_once保证生成单例的唯一和安全
+    assert(value_ != NULL);
+    return *value_;
+  }
+
+ private:
+  static void init()
+  {
+    value_ = new T();
+    if (!detail::has_no_destroy<T>::value) //判断T类型有没有no_destroy这个函数
+    {
+      ::atexit(destroy); //没有的话则退出
+    }
+  }
+
+  static void destroy()
+  {
+    typedef char T_must_be_complete_type[sizeof(T) == 0 ? -1 : 1]; //T是否为一个完整的类型
+    T_must_be_complete_type dummy; (void) dummy; //完整类型则可以执行这条语句
+
+    delete value_;
+    value_ = NULL;
+  }
+
+ private:
+  static pthread_once_t ponce_;
+  static T*             value_; //生成单例类的指针
+};
+
+template<typename T>
+pthread_once_t Singleton<T>::ponce_ = PTHREAD_ONCE_INIT; //pthread_once初始化
+
+template<typename T>
+T* Singleton<T>::value_ = NULL;
+
+}  // namespace muduo
+
+```
+
+* 构造函数删除
+* 继承属性noncopyable表示该模板类不可复制/赋值
+* 维护静态成员变量：T类型指针用于生成唯一安全的单例；ponce用于在POSIX层面保证生成（初始化）单例的过程的线程安全的
+* 返回静态单例的成员函数：调用pthread_once传入singleton的初始化函数（初始化T类型），保证生成单例对象的过程是线程安全的
+* 初始化函数：new一个对象，确保T类型实现了自己的no_destroy函数
+* destroy：判断T此时是否为一个完整的类型，是则执行delete
+
+---
+
+
+
 <br>
 <br>
 <br>

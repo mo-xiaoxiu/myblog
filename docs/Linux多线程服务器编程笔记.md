@@ -321,3 +321,262 @@ shared_ptr<Stock> StockFactory::get(const string& key) {
 }
 ```
 
+<br>
+
+## 多线程编程
+
+### 多线程的线程id
+
+`muduo::CurrentThread::tid()`：使用__thread变量缓存`gettid(2)`的返回值，只有在本线程第一次调用的使用会使用系统调用，之后都是从thread local缓存中拿取线程id
+
+```cpp title="CurrentThread.h"
+namespace muduo
+{
+namespace CurrentThread
+{
+  // internal
+  extern __thread int t_cachedTid;
+  extern __thread char t_tidString[32];
+  extern __thread int t_tidStringLength;
+  extern __thread const char* t_threadName;
+  void cacheTid();
+
+  inline int tid()
+  {
+    if (__builtin_expect(t_cachedTid == 0, 0))
+    {
+      cacheTid();
+    }
+    return t_cachedTid;
+  }
+
+  inline const char* tidString() // for logging
+  {
+    return t_tidString;
+  }
+
+  inline int tidStringLength() // for logging
+  {
+    return t_tidStringLength;
+  }
+
+  inline const char* name()
+  {
+    return t_threadName;
+  }
+
+  bool isMainThread();
+
+  void sleepUsec(int64_t usec);  // for testing
+
+  string stackTrace(bool demangle);
+}  // namespace CurrentThread
+}  // namespace muduo
+```
+
+* `__thread`：**GCC内置的线程局部存储设施**，使用该变量缓存tid信息，*存储效率可与全局变量相比*
+
+  ![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/20230319150944.png)
+
+  ![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/20230319151133.png)
+
+  ```cpp title="muduo/base/Logging.cc"
+  namespace muduo
+  {
+     ...
+         
+  __thread char t_errnobuf[512];
+  __thread char t_time[64];
+  __thread time_t t_lastSecond;
+  
+  const char* strerror_tl(int savedErrno)
+  {
+    return strerror_r(savedErrno, t_errnobuf, sizeof t_errnobuf);
+  }
+  } //namespace muduo
+  
+  // helper class for known string length at compile time
+  class T
+  {
+   public:
+    T(const char* str, unsigned len)
+      :str_(str),
+       len_(len)
+    {
+      assert(strlen(str) == len_);
+    }
+  
+    const char* str_;
+    const unsigned len_;
+  };
+  
+  using namespace muduo;
+  
+  Logger::Impl::Impl(LogLevel level, int savedErrno, const SourceFile& file, int line)
+    : time_(Timestamp::now()),
+      stream_(),
+      level_(level),
+      line_(line),
+      basename_(file)
+  {
+    formatTime();
+    CurrentThread::tid();
+    stream_ << T(CurrentThread::tidString(), CurrentThread::tidStringLength());
+    stream_ << T(LogLevelName[level], 6);
+    if (savedErrno != 0)
+    {
+      stream_ << strerror_tl(savedErrno) << " (errno=" << savedErrno << ") ";
+    }
+  }
+  ```
+
+  ```cpp title="muduo/base/ProcessInfo.cc"
+  namespace muduo
+  {
+  namespace detail
+  {
+  __thread int t_numOpenedFiles = 0;
+  int fdDirFilter(const struct dirent* d)
+  {
+    if (::isdigit(d->d_name[0]))
+    {
+      ++t_numOpenedFiles;
+    }
+    return 0;
+  }
+  
+  __thread std::vector<pid_t>* t_pids = NULL;
+  int taskDirFilter(const struct dirent* d)
+  {
+    if (::isdigit(d->d_name[0]))
+    {
+      t_pids->push_back(atoi(d->d_name));
+    }
+    return 0;
+  }
+  
+  int scanDir(const char *dirpath, int (*filter)(const struct dirent *))
+  {
+    struct dirent** namelist = NULL;
+    int result = ::scandir(dirpath, &namelist, filter, alphasort);
+    assert(namelist == NULL);
+    return result;
+  }
+      
+  int ProcessInfo::openedFiles()
+  {
+    t_numOpenedFiles = 0;
+    scanDir("/proc/self/fd", fdDirFilter);
+    return t_numOpenedFiles;
+  }
+  
+  std::vector<pid_t> ProcessInfo::threads()
+  {
+    std::vector<pid_t> result;
+    t_pids = &result;
+    scanDir("/proc/self/task", taskDirFilter);
+    t_pids = NULL;
+    std::sort(result.begin(), result.end());
+    return result;
+  }
+      
+      ...
+          
+  } //namespace detail
+  } //namespace muduo
+  ```
+
+  ```cpp title="muduo/net/EventLoop.cc"
+  namespace
+  {
+  __thread EventLoop* t_loopInThisThread = 0;
+  
+  EventLoop* EventLoop::getEventLoopOfCurrentThread()
+  {
+    return t_loopInThisThread;
+  }
+  
+  EventLoop::EventLoop()
+    : looping_(false),
+      quit_(false),
+      eventHandling_(false),
+      callingPendingFunctors_(false),
+      iteration_(0),
+      threadId_(CurrentThread::tid()),
+      poller_(Poller::newDefaultPoller(this)),
+      timerQueue_(new TimerQueue(this)),
+      wakeupFd_(createEventfd()),
+      wakeupChannel_(new Channel(this, wakeupFd_)),
+      currentActiveChannel_(NULL)
+  {
+    LOG_DEBUG << "EventLoop created " << this << " in thread " << threadId_;
+    if (t_loopInThisThread)
+    {
+      LOG_FATAL << "Another EventLoop " << t_loopInThisThread
+                << " exists in this thread " << threadId_;
+    }
+    else
+    {
+      t_loopInThisThread = this;
+    }
+    wakeupChannel_->setReadCallback(
+        std::bind(&EventLoop::handleRead, this));
+    // we are always reading the wakeupfd
+    wakeupChannel_->enableReading();
+  }
+  
+  EventLoop::~EventLoop()
+  {
+    LOG_DEBUG << "EventLoop " << this << " of thread " << threadId_
+              << " destructs in thread " << CurrentThread::tid();
+    wakeupChannel_->disableAll();
+    wakeupChannel_->remove();
+    ::close(wakeupFd_);
+    t_loopInThisThread = NULL;
+  }
+      
+  }
+  ```
+
+  
+
+* `__builtin_expect`：减少程序的跳转次数可以提高程序的执行效率，`__builtin_expect(t_cachedTid == 0, 0)`第一个参数表示`t_cachedTid`为0的可能性(LIKELY/UNLIKELY)，第二个参数0为false，表示不太可能。`t_cachedTid`为0这是不太可能的情况，如果执行到了，则执行`cacheTid()`获取tid：
+
+  ```cpp title="Thread.cc"
+  void CurrentThread::cacheTid()
+  {
+    if (t_cachedTid == 0)
+    {
+      t_cachedTid = detail::gettid(); //系统调用获取tid
+      t_tidStringLength = snprintf(t_tidString, sizeof t_tidString, "%5d ", t_cachedTid);
+    }
+  }
+  ```
+
+
+
+**问题：程序执行了`fork(2)`，子进程会不会看到缓存结果？**
+
+**解决方法：使用`pthread_atfork()`注册一个回调，用于清空缓存的线程id**
+
+```cpp title="Thread.cc"
+void afterFork()
+{
+  muduo::CurrentThread::t_cachedTid = 0; //清空tid
+  muduo::CurrentThread::t_threadName = "main";
+  CurrentThread::tid();
+  // no need to call pthread_atfork(NULL, NULL, &afterFork);
+}
+
+class ThreadNameInitializer
+{
+ public:
+  ThreadNameInitializer()
+  {
+    muduo::CurrentThread::t_threadName = "main";
+    CurrentThread::tid();
+    pthread_atfork(NULL, NULL, &afterFork); //使用`pthread_atfork()`注册一个回调
+  }
+};
+```
+
