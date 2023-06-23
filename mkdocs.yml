@@ -100,13 +100,14 @@ nav:
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
   - Linux以及基础:
-    - 二进制分析实战笔记.md
-    - 进程相关.md
+    - 进程管理-调度与进程切换.md
+      # - 二进制分析实战笔记.md
+      # - 进程相关.md
     - splice().md
     - CAN.md
     - 函数调用.md
     - Linux运行的硬件基础.md
-    - 理解了实现再谈网络性能笔记.md
+      # - 理解了实现再谈网络性能笔记.md
   - 多线程编程:
     - thread.md
     - Linux多线程服务器编程笔记.md  
