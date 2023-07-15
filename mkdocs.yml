@@ -49,7 +49,9 @@ nav:
     #  - 队列:
     #    - queue.md   
   - C/C++:
-    - 观《Linux多线程服务器编程》思考记录.md
+    # - 观《Linux多线程服务器编程》思考记录.md
+    - C++STL:
+      - C++11 习STL有感.md
     - C++基于UDP发送数据封装的类.md
     - C语言的一种RAII.md
     - C++Singleton对象模型探索.md
