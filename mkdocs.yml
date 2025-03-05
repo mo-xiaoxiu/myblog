@@ -100,6 +100,8 @@ nav:
     - RSA_ECDHE密码套件.md
     - HTTPS_ECDHE握手解析.md
     - TIME_WAIT问题.md
+    - vsomeip小记.md
+    - vsomeip小记之数据包.md
   - Linux:
     - 进程管理-调度与进程切换.md
     # - 二进制分析实战笔记.md
