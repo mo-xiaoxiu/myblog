@@ -382,7 +382,37 @@ service_discovery_impl::move_offers_into_main_phase(
 
 <br>
 
-这个就是问题的全部分析过程了。接下来就是如何修改的问题。其实也比较简单，但是文章就先写到这吧。
+这个就是问题的全部分析过程了。接下来就是如何修改的问题。其实也比较简单，只需要在进入主阶段的时候，除了将对应的标志位置位之外，还得重新开启定时器，相当于对进入主阶段的时间进行修正：
+
+```cpp
+void
+service_discovery_impl::move_offers_into_main_phase(
+        const std::shared_ptr<boost::asio::steady_timer> &_timer) {
+    // HINT: make sure to lock the repetition_phase_timers_mutex_ before calling
+    // this function set flag on all serviceinfos bound to this timer that they
+    // will be included in the cyclic offers from now on
+    const auto its_timer = repetition_phase_timers_.find(_timer);
+    if (its_timer != repetition_phase_timers_.end()) {
+        for (const auto& its_service : its_timer->second) {
+            for (const auto& its_instance : its_service.second) {
+                its_instance.second->set_is_in_mainphase(true);
+            }
+        }
+        repetition_phase_timers_.erase(_timer);
+    }
+    start_main_phase_timer(); //可以在最后这个位置增加重新开启主阶段定时器
+}
+```
+
+我们尝试重新编译vsomeip并安装，编译`notify_sample`程序并链接新编译的库，运行之后抓取数据包如下：
+
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/image-20250304231919315.png)
+
+这样的效果就和autorsar规范说的一样了：
+
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/20250306105921.png)
+
+当然，以上规范这里的重复阶段最大重复周期次数配置的是2，规范也表示这是个例子，我们可以根据实际需求做延申。
 
 <br>
 
