@@ -378,7 +378,7 @@ service_discovery_impl::move_offers_into_main_phase(
 
 所以在发完重复阶段最后一帧offer之后，需要再等待大约2900ms才会发送offer报文，而进入主阶段的时间实际上在重复阶段结束后延迟一个主阶段offer周期，也就是2000ms的时候就已经到达了。
 
-![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/20250305153302.png)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/20250306102903.png)
 
 <br>
 
