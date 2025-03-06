@@ -52,7 +52,7 @@ offer报文的格式内容有了，那应该按照遵循什么样的规则发送
 
 给大家看下按照autorsar规范的正常报文：
 
-![image-20250304231919315](C:\Users\18071\AppData\Roaming\Typora\typora-user-images\image-20250304231919315.png)
+![](https://myblog-1308923350.cos.ap-guangzhou.myqcloud.com/img/image-20250304231919315.png)
 
 <br>
 
